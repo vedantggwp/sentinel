@@ -9,5 +9,6 @@ overmind
 anthropic
 openai
 cryptography
+mcp[cli]
 pytest
 pytest-asyncio
