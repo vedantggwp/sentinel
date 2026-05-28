@@ -1,0 +1,20 @@
+{
+  "ineligible_contexts": [
+    "mental_health",
+    "self_harm",
+    "medical_emergency",
+    "financial_distress",
+    "bereavement",
+    "addiction",
+    "minor"
+  ],
+  "dimensions": [
+    "contextual_safety",
+    "claim_truthfulness",
+    "urgency_manipulation",
+    "tone_mimicry"
+  ],
+  "block_if_overall_below": 3.0,
+  "escalate_band": [2.5, 3.5],
+  "max_claim_delta": { "rating": 0.5 }
+}

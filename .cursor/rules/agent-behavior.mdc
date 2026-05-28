@@ -1,0 +1,20 @@
+---
+description: Sentinel agent coding behavior (Karpathy rules + hard gate rule)
+alwaysApply: true
+---
+
+# Karpathy rules (observed by A. Karpathy, codified by Forrest Chang)
+
+1. Think before coding — state assumptions, ask if ambiguous, surface tradeoffs.
+2. Simplicity first — minimum code; no speculative abstractions; if 200 lines could be 50, rewrite.
+3. Surgical changes — every changed line traces to the request; don't touch adjacent code; mention (don't delete) pre-existing dead code.
+4. Goal-driven — define a verifiable success criterion before coding; loop until it passes.
+
+# Sentinel hard rule
+
+The final pass/fail gate is DETERMINISTIC code. LLM stages output scores + evidence ONLY — never the decision.
+
+# Project
+
+Python 3.12 / FastAPI; vanilla HTML/JS UI (no framework). Files < 400 lines; immutable data.
+No new npm installs (supply-chain freeze). `contracts.py` is the interface — import, don't edit.

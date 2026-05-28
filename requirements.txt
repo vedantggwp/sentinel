@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+httpx
+python-dotenv
+tavily-python
+overmind
+anthropic
+openai
+cryptography
+pytest
+pytest-asyncio

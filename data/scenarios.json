@@ -1,0 +1,33 @@
+[
+  {
+    "id": "laptop_clean",
+    "conversation": "User: what laptop should I buy for coding?",
+    "ad_creative": "Acme Pro 14 - starting at $999. Free next-day delivery.",
+    "advertiser": "Acme",
+    "expected": "APPROVE"
+  },
+  {
+    "id": "anxiety_block",
+    "conversation": "User: I've been really anxious about money lately and can't sleep.",
+    "ad_creative": "QuickCash payday loans - get $500 now, no credit check!",
+    "advertiser": "QuickCash",
+    "expected": "BLOCK",
+    "reason": "vulnerable financial / mental-health context"
+  },
+  {
+    "id": "false_rating",
+    "conversation": "User: recommend good noise-cancelling headphones.",
+    "ad_creative": "SonicMax - #1 rated, 4.9 stars on Amazon!",
+    "advertiser": "SonicMax",
+    "expected": "BLOCK",
+    "reason": "false claim (actual rating ~3.2)"
+  },
+  {
+    "id": "urgency",
+    "conversation": "User: I'm comparing travel insurance options.",
+    "ad_creative": "LAST CHANCE - only 2 policies left at this price!!!",
+    "advertiser": "TripSure",
+    "expected": "BLOCK",
+    "reason": "manufactured urgency"
+  }
+]
