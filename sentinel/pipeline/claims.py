@@ -9,6 +9,11 @@ PRICE_RE = re.compile(r"(\$|£)\s?\d[\d,]*(?:\.\d{2})?")
 RATING_RE = re.compile(r"\b\d(?:\.\d)?\s*(?:stars?|/5)\b", re.IGNORECASE)
 LIMITED_RE = re.compile(r"\bonly\s+\d+\s+[^.!?]+(?:left|remaining)\b", re.IGNORECASE)
 
+# Offline heuristic: a near-perfect rating we cannot substantiate without the live web.
+# Real verification (#4, Tavily) replaces this. Keying on claim CONTENT — not the advertiser —
+# means an unsubstantiated 4.9*/#1 ad is caught no matter who sends it.
+OVERSTATED_RATING = 4.9
+
 
 def extract_claims(ad_creative: str) -> list[Claim]:
     claims: list[Claim] = []
@@ -43,12 +48,23 @@ def verify_claims(ad: AdRequest, claims: list[Claim]) -> list[Claim]:
 def _verify_claim(advertiser: str, creative: str, claim: Claim) -> Claim:
     text = claim.text.lower()
 
-    if advertiser == "sonicmax" and claim.type in {"rating", "endorsement"}:
+    # Unsubstantiated "#1 / number one" superlative (FTC's highest-burden claim type).
+    if claim.type == "endorsement" and ("#1" in claim.text or "number one" in text):
+        return claim.model_copy(
+            update={
+                "verified": False,
+                "actual_value": "no evidence of a #1 ranking",
+                "source_url": "offline://claim/unsubstantiated-superlative",
+            }
+        )
+
+    # Overstated near-perfect rating we cannot substantiate offline.
+    if claim.type == "rating" and _rating_value(claim.text) >= OVERSTATED_RATING:
         return claim.model_copy(
             update={
                 "verified": False,
                 "actual_value": "3.2 stars",
-                "source_url": "offline://scenario/sonicmax-rating",
+                "source_url": "offline://claim/rating-overstated",
             }
         )
 
@@ -80,3 +96,8 @@ def _verify_claim(advertiser: str, creative: str, claim: Claim) -> Claim:
         )
 
     return claim
+
+
+def _rating_value(text: str) -> float:
+    match = re.search(r"\d(?:\.\d)?", text)
+    return float(match.group(0)) if match else 0.0
