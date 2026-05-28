@@ -1,7 +1,16 @@
 import type { Verdict } from "@/lib/types";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:8000";
+/** Browser uses Next proxy; avoids CORS. Server-side uses env URL. */
+export function getApiBase(): string {
+  if (typeof window !== "undefined") {
+    return "/api/backend";
+  }
+  return (
+    process.env.SENTINEL_API_URL?.replace(/\/$/, "") ??
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
+    "http://127.0.0.1:8000"
+  );
+}
 
 export type ApiEnvelope<T> = {
   success: boolean;
@@ -67,13 +76,11 @@ export type ScenarioRow = {
   reason?: string;
 };
 
-export function getApiBase(): string {
-  return API_BASE;
-}
-
 export async function checkHealth(): Promise<boolean> {
   try {
-    const res = await fetch(`${API_BASE}/health`, { cache: "no-store" });
+    const res = await fetch(`${getApiBase()}/health`, {
+      cache: "no-store",
+    });
     const body = (await res.json()) as ApiEnvelope<{ status: string }>;
     return res.ok && body.success === true;
   } catch {
@@ -82,7 +89,9 @@ export async function checkHealth(): Promise<boolean> {
 }
 
 export async function fetchScenarios(): Promise<ScenarioRow[]> {
-  const res = await fetch(`${API_BASE}/v1/scenarios`, { cache: "no-store" });
+  const res = await fetch(`${getApiBase()}/v1/scenarios`, {
+    cache: "no-store",
+  });
   const body = (await res.json()) as ApiEnvelope<{ scenarios: ScenarioRow[] }>;
   if (!res.ok || !body.success || !body.data) {
     throw new Error(body.error ?? `scenarios failed (${res.status})`);
@@ -93,7 +102,7 @@ export async function fetchScenarios(): Promise<ScenarioRow[]> {
 export async function analyzeAd(
   payload: AnalyzeRequest,
 ): Promise<AnalyzeResponse> {
-  const res = await fetch(`${API_BASE}/v1/analyze`, {
+  const res = await fetch(`${getApiBase()}/v1/analyze`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

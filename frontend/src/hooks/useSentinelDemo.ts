@@ -18,6 +18,11 @@ import type {
 
 export type ApiMode = "live" | "offline";
 
+function adStateForVerdict(verdict: EvaluationResult["verdict"]): AdSlotState {
+  if (verdict === "APPROVE") return "approved";
+  return "blocked";
+}
+
 export function useSentinelDemo() {
   const [scenarioId, setScenarioId] = useState(DEMO_SCENARIOS[0].id);
   const [adState, setAdState] = useState<AdSlotState>("idle");
@@ -25,14 +30,26 @@ export function useSentinelDemo() {
   const [result, setResult] = useState<EvaluationResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [apiMode, setApiMode] = useState<ApiMode>("offline");
+  const [apiHint, setApiHint] = useState<string | null>(null);
   const [mismatch, setMismatch] = useState<string | null>(null);
 
   const scenario: DemoScenario =
     getScenario(scenarioId) ?? DEMO_SCENARIOS[0];
 
-  useEffect(() => {
-    checkHealth().then((ok) => setApiMode(ok ? "live" : "offline"));
+  const refreshApiStatus = useCallback(async () => {
+    const ok = await checkHealth();
+    setApiMode(ok ? "live" : "offline");
+    setApiHint(
+      ok
+        ? null
+        : "Backend offline — using demo fixtures. Start: uvicorn sentinel.main:app --port 8000",
+    );
+    return ok;
   }, []);
+
+  useEffect(() => {
+    refreshApiStatus();
+  }, [refreshApiStatus]);
 
   const selectScenario = useCallback((id: string) => {
     setScenarioId(id);
@@ -56,60 +73,64 @@ export function useSentinelDemo() {
     setMismatch(null);
 
     const started = performance.now();
+    const live = await checkHealth();
+    setApiMode(live ? "live" : "offline");
 
     try {
-      if (apiMode === "live") {
+      if (live) {
+        setApiHint(null);
         const payload = scenarioToAnalyzePayload(scenario);
-        const [data] = await Promise.all([
-          analyzeAd(payload),
-          runDemoPipeline(scenario.evaluation, setSteps),
-        ]);
+        const data = await analyzeAd(payload);
         const evaluation = mapAnalyzeToEvaluation(
           data,
           scenario.candidateAd,
           Math.round(performance.now() - started),
         );
+        await runDemoPipeline(evaluation, setSteps);
         setResult(evaluation);
-        setSteps(evaluation.steps);
 
-        if (!verdictMatchesExpected(evaluation.verdict, scenario.expectedVerdict)) {
+        if (
+          !verdictMatchesExpected(
+            evaluation.verdict,
+            scenario.expectedVerdict,
+          )
+        ) {
           setMismatch(
             `Expected ${scenario.expectedVerdict}, API returned ${evaluation.verdict} (rule: ${evaluation.ruleFired})`,
           );
         }
-
-        setAdState(
-          evaluation.verdict === "APPROVE"
-            ? "approved"
-            : "blocked",
-        );
+        setAdState(adStateForVerdict(evaluation.verdict));
       } else {
+        setApiHint(
+          "Backend offline — demo fixtures. Start API then click reconnect.",
+        );
         const evaluation = await runDemoPipeline(
           scenario.evaluation,
           setSteps,
         );
         setResult(evaluation);
-        setAdState(
-          evaluation.verdict === "APPROVE" ? "approved" : "blocked",
-        );
+        setAdState(adStateForVerdict(evaluation.verdict));
       }
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "API request failed";
-      setMismatch(message);
+      setApiHint(`API error — fell back to demo fixtures. (${message})`);
       setApiMode("offline");
       const evaluation = await runDemoPipeline(
         scenario.evaluation,
         setSteps,
       );
       setResult(evaluation);
-      setAdState(
-        evaluation.verdict === "APPROVE" ? "approved" : "blocked",
-      );
+      setAdState(adStateForVerdict(evaluation.verdict));
     } finally {
       setIsRunning(false);
     }
-  }, [apiMode, isRunning, scenario]);
+  }, [isRunning, scenario]);
+
+  useEffect(() => {
+    void runEvaluation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run pipeline per scenario
+  }, [scenarioId]);
 
   return {
     scenarios: DEMO_SCENARIOS,
@@ -123,6 +144,8 @@ export function useSentinelDemo() {
     runEvaluation,
     reset,
     apiMode,
+    apiHint,
     mismatch,
+    refreshApiStatus,
   };
 }

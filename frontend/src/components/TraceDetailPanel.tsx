@@ -12,9 +12,11 @@ interface TraceDetailPanelProps {
   result: EvaluationResult | null;
   isRunning: boolean;
   apiMode?: "live" | "offline";
+  apiHint?: string | null;
   mismatch?: string | null;
   onRun: () => void;
   onReset: () => void;
+  onReconnect?: () => void;
 }
 
 export function TraceDetailPanel({
@@ -23,9 +25,11 @@ export function TraceDetailPanel({
   result,
   isRunning,
   apiMode = "offline",
+  apiHint,
   mismatch,
   onRun,
   onReset,
+  onReconnect,
 }: TraceDetailPanelProps) {
   const [selectedStepId, setSelectedStepId] = useState<TraceStepId | null>(
     null,
@@ -55,6 +59,16 @@ export function TraceDetailPanel({
           </span>
         </nav>
         <div className="flex shrink-0 gap-2">
+          {apiMode === "offline" && onReconnect && (
+            <button
+              type="button"
+              onClick={onReconnect}
+              disabled={isRunning}
+              className="rounded-md border border-[var(--border)] px-2.5 py-1 font-mono text-[10px] text-[var(--muted)] hover:text-[var(--foreground)] disabled:opacity-40"
+            >
+              reconnect
+            </button>
+          )}
           <button
             type="button"
             onClick={onReset}
@@ -73,6 +87,12 @@ export function TraceDetailPanel({
           </button>
         </div>
       </header>
+
+      {apiHint && !mismatch && (
+        <div className="border-b border-[var(--review)]/30 bg-[var(--review)]/10 px-4 py-2 font-mono text-[10px] text-[var(--review)]">
+          {apiHint}
+        </div>
+      )}
 
       {mismatch && (
         <div className="border-b border-[var(--block)]/40 bg-[var(--block)]/10 px-4 py-2 font-mono text-[10px] text-[var(--block)]">

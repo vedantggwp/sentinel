@@ -18,7 +18,9 @@ export function SentinelDashboard() {
     runEvaluation,
     reset,
     apiMode,
+    apiHint,
     mismatch,
+    refreshApiStatus,
   } = useSentinelDemo();
 
   return (
@@ -45,9 +47,11 @@ export function SentinelDashboard() {
           result={result}
           isRunning={isRunning}
           apiMode={apiMode}
+          apiHint={apiHint}
           mismatch={mismatch}
           onRun={runEvaluation}
           onReset={reset}
+          onReconnect={refreshApiStatus}
         />
       </div>
     </div>
