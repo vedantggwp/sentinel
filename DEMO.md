@@ -58,10 +58,13 @@ True
 
 ## Hosted deploy handoff
 
-Alpic needs the repo connected with these settings:
+Alpic needs the repo connected with these build settings:
 
 - `installCommand`: `uv venv && uv pip install -r requirements.txt`
 - `startCommand`: `uv run python -m sentinel.mcp_server`
+
+Set these as Alpic dashboard environment variables:
+
 - `PORT`: `8000`
 - `ENV`: `production`
 - `ATTESTATION_PRIVATE_KEY_PEM`: paste the generated PEM contents as a secret

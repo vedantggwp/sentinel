@@ -34,4 +34,4 @@
 - 2026-05-28: Made attestation deploy-ready — signing key loads from `ATTESTATION_PRIVATE_KEY_PEM` env when no key file exists; added `alpic.json`. Deployed `verify()` now returns signed (not silently unsigned) receipts.
 - 2026-05-28: Added local audit tracing, seeded optimizer cases, Thrad mock fallback, and `/demo/` UI with escalation actions.
 - 2026-05-28: Added `DEMO.md` runbook for the presentation path and hosted deploy handoff.
-- 2026-05-28: Tightened Alpic config against current docs and enabled stateless JSON Streamable HTTP on the MCP server.
+- 2026-05-28: Tightened Alpic config against current docs and enabled stateless JSON Streamable HTTP on the MCP server; env vars stay in dashboard settings.

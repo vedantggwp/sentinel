@@ -1,10 +1,5 @@
 {
   "$schema": "https://assets.alpic.ai/alpic.json",
   "installCommand": "uv venv && uv pip install -r requirements.txt",
-  "startCommand": "uv run python -m sentinel.mcp_server",
-  "healthcheckPath": "/mcp",
-  "env": {
-    "ENV": "production",
-    "PORT": "8000"
-  }
+  "startCommand": "uv run python -m sentinel.mcp_server"
 }
