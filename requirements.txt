@@ -3,6 +3,7 @@ uvicorn[standard]
 pydantic
 pydantic-settings
 httpx
+httpx2
 python-dotenv
 tavily-python
 overmind
