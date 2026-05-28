@@ -99,9 +99,10 @@ def _load_signing_key(private_key_path: str | None) -> Ed25519PrivateKey | None:
             serialization.load_pem_private_key(Path(path).read_bytes(), password=None)
         )
     if settings.attestation_private_key_pem:
+        pem = settings.attestation_private_key_pem.replace("\\n", "\n")
         return _coerce_ed25519(
             serialization.load_pem_private_key(
-                settings.attestation_private_key_pem.encode("utf-8"), password=None
+                pem.encode("utf-8"), password=None
             )
         )
     return None

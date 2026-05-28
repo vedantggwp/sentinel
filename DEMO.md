@@ -98,6 +98,7 @@ Set these as Alpic dashboard environment variables:
 
 - `PORT`: `8000`
 - `ENV`: `production`
-- `ATTESTATION_PRIVATE_KEY_PEM`: paste the generated PEM contents as a secret
+- `ATTESTATION_PRIVATE_KEY_PEM`: paste the generated PEM contents as a secret;
+  if the dashboard only accepts one line, replace line breaks with literal `\n`
 
 The remote smoke test is a MCP `verify(...)` call against `/mcp`.

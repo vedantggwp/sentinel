@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+import sentinel.attest as attest
 from sentinel.attest import create_attestation, verify_attestation, write_private_key
 from sentinel.contracts import AdRequest, PipelineResult, Verdict
 from sentinel.main import app
@@ -91,6 +92,29 @@ def test_attestation_sign_and_verify(tmp_path):
         update={"result": result.model_copy(update={"rule_fired": "tampered"})}
     )
     assert verify_attestation(tampered) is False
+
+
+def test_attestation_accepts_escaped_pem_env(tmp_path, monkeypatch):
+    key_path = tmp_path / "attest_ed25519"
+    write_private_key(str(key_path))
+    monkeypatch.setattr(
+        attest.settings,
+        "attestation_private_key_pem",
+        key_path.read_text(encoding="utf-8").replace("\n", "\\n"),
+    )
+    ad = AdRequest(ad_id="x", conversation="hi", ad_creative="buy this")
+    result = PipelineResult(
+        ad_id="x",
+        verdict=Verdict.APPROVE,
+        scores={"contextual_safety": 5.0},
+        rule_fired="approve",
+    )
+
+    attestation = create_attestation(
+        ad, result, private_key_path=str(tmp_path / "missing")
+    )
+
+    assert verify_attestation(attestation) is True
 
 
 def test_mcp_verify_tool_uses_same_gate():
