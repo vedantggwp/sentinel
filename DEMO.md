@@ -8,6 +8,10 @@ uv run --python 3.12 --with-requirements requirements.txt python -c "from sentin
 uv run --python 3.12 --with-requirements requirements.txt uvicorn sentinel.main:app --reload --port 8000
 ```
 
+Set `CONTEXT_CLASSIFIER_BACKEND=auto` to use Thrad's pinned DistilBERT ONNX
+model when the model cache/dependencies are available. Without that env value,
+Sentinel stays on the deterministic keyword gate for offline-stable tests.
+
 Open:
 
 ```text

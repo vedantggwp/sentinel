@@ -1,4 +1,5 @@
 """Smoke tests — the skeleton runs green from commit one."""
+
 import json
 from pathlib import Path
 
@@ -81,13 +82,22 @@ def test_attestation_sign_and_verify(tmp_path):
     result = PipelineResult(
         ad_id="x",
         verdict=Verdict.APPROVE,
-        scores={"contextual_safety": 5.0},
+        scores={
+            "contextual_safety": 5.0,
+            "context_classifier_available": 1.0,
+            "context_classifier_confidence": 0.8,
+            "context_classifier_label_index": 7.0,
+        },
         rule_fired="approve",
     )
 
     attestation = create_attestation(ad, result, private_key_path=str(key_path))
 
     assert verify_attestation(attestation) is True
+    assert "context_classifier" in attestation.models_used
+    assert attestation.models_used["context_classifier_prediction"] == (
+        "H:purchasable_products@0.8000"
+    )
     tampered = attestation.model_copy(
         update={"result": result.model_copy(update={"rule_fired": "tampered"})}
     )

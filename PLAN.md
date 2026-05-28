@@ -21,6 +21,7 @@ An independent safety layer for ads inside AI conversations: it reads the moment
 | 7 | **Overmind optimizer is not a Python call.** It runs via Cursor/Claude-Code slash-commands over a `{input, expected_output}` dataset (10–50 cases). Tracing = OTel spans (`init`/`get_tracer`/`start_as_current_span`). `OVERMIND_PROJECT_ID` is **not** an SDK var. | `tracing.py` = **our own** wrapper that owns audit persistence; Overmind span is optional decoration, errors swallowed. Seed 25 cases as `{input, expected_output}` JSON. Config now exposes `overmind_service_name`/`overmind_environment`. | pypi.org/project/overmind · docs.overmindlab.ai |
 | 4 | Tavily: use `AsyncTavilyClient`, `search(query, search_depth="advanced", include_answer="advanced", max_results=5)`. `score` = relevance, **not** truth — don't feed it to the gate as confidence. | Async client in FastAPI; **cache fixtures** so the demo never dies on latency. | docs.tavily.com · github.com/tavily-ai/tavily-python |
 | 8 | MCP: `pip install "mcp[cli]"`; `from mcp.server.fastmcp import FastMCP`; `@mcp.tool()`; return the `Attestation` Pydantic model directly for a rich output schema. | Added `mcp[cli]` to requirements. Expose `verify(...) -> Attestation`. | github.com/modelcontextprotocol/python-sdk |
+| 2 | **Thrad ships the DistilBERT classifier we wanted.** `Thrad/thrad-distilbert-conversation-classifier` is Apache-2.0, exposes `model.onnx`, and classifies conversation intent into A-M labels. Thrad treats `D`, `J`, `M` as banned for ad serving. | Context gate now lazy-loads the pinned ONNX model when available, records label/confidence as signed evidence, maps policy-threshold `D/J/M` into deterministic ineligible context flags, and falls back to heuristics when unavailable. | github.com/Thrads/Conversation-Classifiers · huggingface.co/Thrad/thrad-distilbert-conversation-classifier |
 | — | **Credibility**: GARM Floor + IAB taxonomy + FTC substantiation + ASA vulnerable-consumer rules are real standards we map onto. Our context flags = the *consumer-vulnerability axis* GARM omits. | README/demo: say we implement the vulnerability axis deliberately (not the full GARM content floor). Cite ASA payday/gambling rules for the auto-block rule; FTC for claim types. | WFA/GARM · IAB Tech Lab · FTC · ASA/CAP |
 
 ---
@@ -52,7 +53,7 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 - **#8 mcp_server** — wrap pipeline as `verify(...) -> Attestation`.
 
 ### 🟢 Composer 2.5 — fast, well-specified codegen
-- **#2 context_gate** — ~20ms keyword/heuristic vulnerability classifier, **no LLM**. Test: blocks `anxiety_block`, passes `laptop_clean`.
+- **#2 context_gate** — Thrad DistilBERT intent classifier with keyword fallback, **no LLM**. Test: blocks `anxiety_block`, passes `laptop_clean`, and never emits a verdict.
 - **#3 claim_extractor** — small fast model → structured `Claim[]`. Test: extracts "4.9 stars" from the headphones scenario.
 
 ### 🟠 Codex 5.5 — integration-heavy, uses the research findings
@@ -69,7 +70,7 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 
 ## Build order (critical path to a working demo)
 
-1. **Gate-first vertical slice (done 2026-05-28):** `context_gate` (#2) + safety scoring + `decide_placement` (#5) wired through `/v1/analyze`. All 4 seed scenarios return expected verdicts with deterministic `rule_fired`.
+1. **Gate-first vertical slice (done 2026-05-28):** `context_gate` (#2) + safety scoring + `decide_placement` (#5) wired through `/v1/analyze`. All 4 seed scenarios return expected verdicts with deterministic `rule_fired`; Thrad DistilBERT is now an optional pinned classifier signal with heuristic fallback.
 2. **Truth layer (offline fixture done; Tavily adapter next):** `claim_extractor` (#3) + cached `fact_verifier` (#4) make the false-rating BLOCK evidence-backed without network.
 3. **Receipt (sign/verify helper done; runtime key setup next):** `attestation` (#6) signs when `ATTESTATION_PRIVATE_KEY_PATH` exists; tests prove verify passes and tamper fails.
 4. **Reach (local MCP wrapper done; deploy next):** `mcp_server` (#8) exposes `verify` over `streamable-http`; then Alpic (#12).

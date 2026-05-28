@@ -12,3 +12,9 @@ cryptography
 mcp[cli]
 pytest
 pytest-asyncio
+
+# Thrad open-source conversation classifier (lazy-loaded; heuristic fallback if unavailable).
+huggingface-hub
+numpy
+onnxruntime
+transformers

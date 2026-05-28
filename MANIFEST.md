@@ -13,7 +13,8 @@
 - `sentinel/mcp_server.py` — FastMCP `verify` tool over streamable HTTP; wraps the same deterministic pipeline.
 - `sentinel/tracing.py` — Local audit JSONL persistence plus optional Overmind span emission.
 - `sentinel/integrations/thrad_client.py` — Thrad staging adapter with deterministic mock fallback.
-- `sentinel/pipeline/` — Offline context gate, claim extractor, fixture fact verifier, safety judge, and deterministic `decide_placement`.
+- `sentinel/pipeline/` — Thrad DistilBERT context classifier with heuristic fallback, claim extractor, fixture fact verifier, safety judge, and deterministic `decide_placement`.
+- `sentinel/pipeline/thrad_context_classifier.py` — Lazy ONNX wrapper for `Thrad/thrad-distilbert-conversation-classifier`, pinned to a Hugging Face revision and mapped to A-M intent labels.
 - `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
 - `alpic.json` — Alpic deploy manifest with uv venv install/start commands for hosting the MCP `verify` tool (#12).
 - `ui/` — Vanilla split-screen demo UI served by FastAPI at `/demo/`.
@@ -51,3 +52,4 @@
 - 2026-05-28: Added Streamable HTTP MCP smoke script so local and Alpic `/mcp` endpoints can be verified with the same command.
 - 2026-05-28: Added `sentinel/eval.py` and `tests/test_eval.py` — 25-case regression suite with `expected_rule_fired` pins.
 - 2026-05-28: Updated `AGENTS.md` — continual-learning learned preferences/facts; gitignored `.cursor/hooks/state/`.
+- 2026-05-28: Integrated Thrad's open-source DistilBERT conversation classifier as an optional context-gate signal; policy-threshold `D/J/M` labels map into deterministic ineligible context flags, direct illegal/harmful asks stay heuristic-blocked, and missing model/deps fall back to heuristics.

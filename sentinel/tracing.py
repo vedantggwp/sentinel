@@ -48,6 +48,7 @@ def _audit_record(
         "reason": result.reason,
         "scores": result.scores,
         "vulnerability_flags": result.vulnerability_flags,
+        "models_used": attestation.models_used,
         "claims": [
             {
                 "text": claim.text,

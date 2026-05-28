@@ -48,5 +48,6 @@ All keys (Thrad/Tavily/Overmind/OpenAI/Anthropic + the attestation signing key) 
 
 - Layne nominally owns `sentinel/integrations/` and `ui/`; Ved may backfill that lane—check git authorship before assuming Layne landed a change.
 - Regression eval dataset: `data/overmind_seed_cases.json` (25 cases with `expected_output` and `expected_rule_fired`); runner in `sentinel/eval.py`, CI in `tests/test_eval.py`.
+- Context gate can use Thrad's pinned open-source DistilBERT ONNX classifier (`Thrad/thrad-distilbert-conversation-classifier`) when dependencies/cache are available; it falls back to the keyword heuristic and still never emits a verdict.
 - Run tests with the project venv (Python 3.12): `.venv/bin/python -m pytest -q`—bare `pytest` on system Python often fails (missing FastAPI).
 - Feature branches created via Cursor diff-tab flows use the `cursor/` prefix (e.g. `cursor/eval-regression-suite`).

@@ -16,6 +16,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 
 from sentinel.config import settings
 from sentinel.contracts import AdRequest, Attestation, PipelineResult
+from sentinel.pipeline.context_gate import context_gate_model_metadata
 
 
 def create_attestation(
@@ -28,13 +29,18 @@ def create_attestation(
         ad_hash=_sha256(ad.ad_creative),
         verdict=result.verdict,
         result=result,
-        models_used={"pipeline": "offline-deterministic-v0"},
+        models_used={
+            "pipeline": "offline-deterministic-v0",
+            **context_gate_model_metadata(result.scores),
+        },
         issued_at=datetime.now(UTC).isoformat(),
     )
 
     private_key = _load_signing_key(private_key_path)
     if private_key is None:
-        return attestation  # no key configured -> unsigned receipt (local dev / no secret)
+        return (
+            attestation  # no key configured -> unsigned receipt (local dev / no secret)
+        )
 
     signature = private_key.sign(_canonical_payload(attestation))
     public_key = private_key.public_key().public_bytes(
@@ -101,9 +107,7 @@ def _load_signing_key(private_key_path: str | None) -> Ed25519PrivateKey | None:
     if settings.attestation_private_key_pem:
         pem = settings.attestation_private_key_pem.replace("\\n", "\n")
         return _coerce_ed25519(
-            serialization.load_pem_private_key(
-                pem.encode("utf-8"), password=None
-            )
+            serialization.load_pem_private_key(pem.encode("utf-8"), password=None)
         )
     return None
 

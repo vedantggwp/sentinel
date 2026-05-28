@@ -14,7 +14,7 @@ A request flows through a deterministic pipeline. The LLM stages produce **score
 
 ```
 ad (Thrad bid-request)
-  → 1. Context Gate      fast vulnerability check (~20ms, no LLM): is this moment safe for ANY ad?
+  → 1. Context Gate      Thrad DistilBERT + heuristic fallback: is this moment safe for ANY ad?
   → 2. Claim Extraction  pull verifiable claims from the ad creative
   → 3. Fact Verification check each claim against the live web (Tavily)
   → 4. Safety Judge      score contextual safety, claim truthfulness, urgency, tone-mimicry
@@ -24,6 +24,14 @@ ad (Thrad bid-request)
 ```
 
 The signed attestation is exposed as an **MCP tool** (`verify`), so any agent can call Sentinel before serving an ad.
+
+Set `CONTEXT_CLASSIFIER_BACKEND=auto` to let the context gate use Thrad's open-source
+[`thrad-distilbert-conversation-classifier`](https://huggingface.co/Thrad/thrad-distilbert-conversation-classifier)
+when the ONNX runtime dependencies and model cache are available. It records
+the model label, label index, and confidence as signed evidence; deterministic Sentinel code
+maps policy-threshold Thrad-banned intents (`D`, `J`, `M`) into ineligible
+context flags. If the model is disabled, missing, or offline, the keyword
+heuristic keeps tests, the demo, and the MCP tool working.
 
 ## Quickstart
 
@@ -44,7 +52,7 @@ python -c "from sentinel.attest import write_private_key; write_private_key('key
 
 ## Stack
 
-FastAPI (Python 3.12) · **Tavily** (live claim verification) · **Overmind** (decision tracing + policy optimization) · **Alpic** (MCP deployment) · built in **Cursor**. Vanilla HTML/JS UI, no build step.
+FastAPI (Python 3.12) · **Thrad DistilBERT** (conversation context classification) · **Tavily** (live claim verification) · **Overmind** (decision tracing + policy optimization) · **Alpic** (MCP deployment) · built in **Cursor**. Vanilla HTML/JS UI, no build step.
 
 ## Architecture principle
 
