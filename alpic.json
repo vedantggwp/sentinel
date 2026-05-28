@@ -1,0 +1,9 @@
+{
+  "installCommand": "uv pip install -r requirements.txt",
+  "startCommand": "python -m sentinel.mcp_server",
+  "healthcheckPath": "/mcp",
+  "env": {
+    "ENV": "production",
+    "PORT": "8000"
+  }
+}

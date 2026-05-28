@@ -12,12 +12,15 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     tavily_api_key: str = ""
     thrad_api_key: str = ""
+    thrad_api_url: str = ""
     overmind_api_key: str = ""
     overmind_project_id: str = ""  # console-only; the Python SDK does NOT read this
     overmind_service_name: str = "sentinel-gate"  # SDK groups traces by this name
     overmind_environment: str = "development"  # SDK env tag (OVERMIND_ENVIRONMENT)
     alpic_token: str = ""
     attestation_private_key_path: str = "./keys/attest_ed25519"
+    # PEM contents for hosted deploys where keys/ is never committed.
+    attestation_private_key_pem: str = ""
     port: int = 8000
     env: str = "development"
 

@@ -29,13 +29,20 @@ The signed attestation is exposed as an **MCP tool** (`verify`), so any agent ca
 cp .env.example .env                 # fill in API keys (never commit .env)
 uv pip install -r requirements.txt
 uvicorn sentinel.main:app --reload --port 8000
-python3 -m http.server -d ui 5500    # demo UI
+open http://localhost:8000/demo/      # demo UI
 pytest -q                            # tests
+```
+
+For a signed local receipt, generate a development ed25519 key before running
+the API:
+
+```bash
+python -c "from sentinel.attest import write_private_key; write_private_key('keys/attest_ed25519')"
 ```
 
 ## Stack
 
-FastAPI (Python 3.12) · **Tavily** (live claim verification) · **Overmind** (decision tracing + policy optimization) · **Alpic / Skybridge** (MCP deployment) · built in **Cursor**. Vanilla HTML/JS UI, no build step.
+FastAPI (Python 3.12) · **Tavily** (live claim verification) · **Overmind** (decision tracing + policy optimization) · **Alpic** (MCP deployment) · built in **Cursor**. Vanilla HTML/JS UI, no build step.
 
 ## Architecture principle
 

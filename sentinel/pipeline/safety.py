@@ -18,6 +18,12 @@ TONE_MIMICRY_PATTERNS = (
     "because you told me",
 )
 
+GREY_ZONE_TONE_PATTERNS = (
+    "recommended for you",
+    "selected for your conversation",
+    "based on this conversation",
+)
+
 
 def score_safety(
     ad_creative: str,
@@ -47,4 +53,8 @@ def _score_urgency(text: str) -> float:
 
 
 def _score_tone_mimicry(text: str) -> float:
-    return 2.0 if any(pattern in text for pattern in TONE_MIMICRY_PATTERNS) else 5.0
+    if any(pattern in text for pattern in TONE_MIMICRY_PATTERNS):
+        return 2.0
+    if any(pattern in text for pattern in GREY_ZONE_TONE_PATTERNS):
+        return 3.0
+    return 5.0

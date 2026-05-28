@@ -9,8 +9,13 @@
 - `sentinel/config.py` — Env-backed settings (pydantic-settings). All secrets via `.env`.
 - `sentinel/main.py` — FastAPI app; `/health` + `/v1/analyze` wired to the offline deterministic pipeline.
 - `sentinel/mcp_server.py` — FastMCP `verify` tool over streamable HTTP; wraps the same deterministic pipeline.
-- `sentinel/pipeline/` — Offline context gate, claim extraction, fixture verification, safety scoring, and deterministic `decide_placement`.
-- `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs when `ATTESTATION_PRIVATE_KEY_PATH` exists.
+- `sentinel/tracing.py` — Local audit JSONL persistence plus optional Overmind span emission.
+- `sentinel/integrations/thrad_client.py` — Thrad staging adapter with deterministic mock fallback.
+- `sentinel/pipeline/` — Offline context gate, claim extractor, fixture fact verifier, safety judge, and deterministic `decide_placement`.
+- `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
+- `alpic.json` — Alpic deploy manifest (install/start commands) for hosting the MCP `verify` tool (#12).
+- `ui/` — Vanilla split-screen demo UI served by FastAPI at `/demo/`.
+- `data/overmind_seed_cases.json` — 25 `{input, expected_output}` cases for optimizer/demo seeding.
 - `data/policy.json` — Ineligible contexts, score dimensions, block/escalate thresholds.
 - `data/scenarios.json` — 4 seed scenarios = the acceptance test for the demo.
 - `tests/test_smoke.py` — Health, API scenario, attestation, and MCP wrapper smoke tests.
@@ -25,3 +30,5 @@
 - 2026-05-28: Added attestation sign/verify helpers and tests proving valid signatures pass while tampering fails.
 - 2026-05-28: Added local FastMCP `verify` tool using `streamable-http` for the Alpic deployment path.
 - 2026-05-28: Aligned `decide_placement` with the policy-backed gate contract and exhaustive branch tests.
+- 2026-05-28: Made attestation deploy-ready — signing key loads from `ATTESTATION_PRIVATE_KEY_PEM` env when no key file exists; added `alpic.json`. Deployed `verify()` now returns signed (not silently unsigned) receipts.
+- 2026-05-28: Added local audit tracing, seeded optimizer cases, Thrad mock fallback, and `/demo/` UI with escalation actions.

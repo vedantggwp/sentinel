@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from sentinel.contracts import AdRequest, PipelineResult
-from sentinel.pipeline.claims import extract_claims, verify_claims
+from sentinel.pipeline.claim_extractor import extract_claims
 from sentinel.pipeline.context_gate import assess_context
+from sentinel.pipeline.fact_verifier import verify_claims
 from sentinel.pipeline.gate import decide_placement
 from sentinel.pipeline.policy import load_policy
-from sentinel.pipeline.safety import score_safety
+from sentinel.pipeline.safety_judge import score_safety
 
 
 def run_pipeline(ad: AdRequest) -> PipelineResult:

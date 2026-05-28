@@ -73,7 +73,7 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 2. **Truth layer (offline fixture done; Tavily adapter next):** `claim_extractor` (#3) + cached `fact_verifier` (#4) make the false-rating BLOCK evidence-backed without network.
 3. **Receipt (sign/verify helper done; runtime key setup next):** `attestation` (#6) signs when `ATTESTATION_PRIVATE_KEY_PATH` exists; tests prove verify passes and tamper fails.
 4. **Reach (local MCP wrapper done; deploy next):** `mcp_server` (#8) exposes `verify` over `streamable-http`; then Alpic (#12).
-5. **Observability + polish:** `tracing.py` (#7) + 25 seed cases; UI (#10/#11) consumes the receipt.
+5. **Observability + polish (local trace/UI done; hosted Overmind next):** `tracing.py` (#7) persists local audit JSONL and ships 25 seed cases; UI (#10/#11) consumes the trace and receipt.
 
 **Reliability rule:** every external call (Tavily, Thrad, LLM) has a cached/mock fallback. The live demo must run with the network unplugged.
 
@@ -82,5 +82,6 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 - `uv run --python 3.12 --with-requirements requirements.txt pytest -q` green, gate unit tests cover hard rules.
 - All 4 seed scenarios return the `expected` verdict via `/v1/analyze`. **Done.**
 - One BLOCK shows: vulnerability flag OR a fact-checked false claim with `actual_value` + `source_url`. **Done.**
-- Response carries an `Attestation`; verify passes and tamper fails when the local ed25519 key is configured. **Helper/test done; runtime key setup next.**
-- `verify` reachable as a deployed MCP tool. **Local server wrapper done; Alpic deploy next.**
+- Response carries an `Attestation`; verify passes and tamper fails when the local ed25519 key is configured. **Done.**
+- Demo UI runs at `/demo/` and covers APPROVE/BLOCK/ESCALATE with receipt + trace. **Done locally.**
+- `verify` reachable as a deployed MCP tool. **Local server wrapper + `alpic.json` done; Alpic dashboard deploy next.**

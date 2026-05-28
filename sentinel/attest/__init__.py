@@ -32,11 +32,10 @@ def create_attestation(
         issued_at=datetime.now(UTC).isoformat(),
     )
 
-    key_path = private_key_path or settings.attestation_private_key_path
-    if not Path(key_path).exists():
-        return attestation
+    private_key = _load_signing_key(private_key_path)
+    if private_key is None:
+        return attestation  # no key configured -> unsigned receipt (local dev / no secret)
 
-    private_key = _load_private_key(key_path)
     signature = private_key.sign(_canonical_payload(attestation))
     public_key = private_key.public_key().public_bytes(
         encoding=serialization.Encoding.Raw,
@@ -87,8 +86,34 @@ def _canonical_payload(attestation: Attestation) -> bytes:
     return json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+def _load_signing_key(private_key_path: str | None) -> Ed25519PrivateKey | None:
+    """Resolve the ed25519 signing key, or None if none is configured.
+
+    Prefers a PEM file on disk; falls back to PEM material in
+    ATTESTATION_PRIVATE_KEY_PEM (env) for hosted deploys (e.g. Alpic) where
+    `keys/` is gitignored and never reaches the build.
+    """
+    path = private_key_path or settings.attestation_private_key_path
+    if path and Path(path).exists():
+        return _coerce_ed25519(
+            serialization.load_pem_private_key(Path(path).read_bytes(), password=None)
+        )
+    if settings.attestation_private_key_pem:
+        return _coerce_ed25519(
+            serialization.load_pem_private_key(
+                settings.attestation_private_key_pem.encode("utf-8"), password=None
+            )
+        )
+    return None
+
+
 def _load_private_key(path: str) -> Ed25519PrivateKey:
-    key = serialization.load_pem_private_key(Path(path).read_bytes(), password=None)
+    return _coerce_ed25519(
+        serialization.load_pem_private_key(Path(path).read_bytes(), password=None)
+    )
+
+
+def _coerce_ed25519(key: object) -> Ed25519PrivateKey:
     if not isinstance(key, Ed25519PrivateKey):
         raise ValueError("attestation key must be ed25519")
     return key

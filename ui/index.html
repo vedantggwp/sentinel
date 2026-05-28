@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sentinel Demo</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="left-pane" aria-label="Scenario runner">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Sentinel</p>
+            <h1>Ad safety gate</h1>
+          </div>
+          <div class="service-state" id="service-state">Checking</div>
+        </header>
+
+        <div class="scenario-list" id="scenario-list"></div>
+      </section>
+
+      <section class="right-pane" aria-label="Decision trace">
+        <div class="decision-strip" id="decision-strip">
+          <span id="verdict">READY</span>
+          <strong id="rule">waiting_for_run</strong>
+        </div>
+
+        <section class="conversation-band">
+          <div>
+            <p class="label">Conversation</p>
+            <p id="conversation">Choose a scenario.</p>
+          </div>
+          <div>
+            <p class="label">Ad</p>
+            <p id="creative">No candidate ad yet.</p>
+          </div>
+        </section>
+
+        <section class="score-grid" id="score-grid"></section>
+
+        <section class="trace-section">
+          <div class="section-head">
+            <h2>Evidence</h2>
+            <span id="trace-id">no trace</span>
+          </div>
+          <div id="claims" class="claims"></div>
+        </section>
+
+        <section class="receipt-section">
+          <div class="section-head">
+            <h2>Receipt</h2>
+            <span id="signature-state">unsigned</span>
+          </div>
+          <pre id="receipt">{}</pre>
+        </section>
+
+        <section class="escalation-panel" id="escalation-panel" hidden>
+          <div>
+            <p class="label">Human review</p>
+            <p id="escalation-copy">Grey-zone placement requires a manual call.</p>
+          </div>
+          <div class="review-actions">
+            <button type="button" data-review="BLOCK">Block</button>
+            <button type="button" data-review="APPROVE">Approve</button>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

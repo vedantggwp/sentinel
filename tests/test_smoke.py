@@ -8,6 +8,7 @@ from sentinel.attest import create_attestation, verify_attestation, write_privat
 from sentinel.contracts import AdRequest, PipelineResult, Verdict
 from sentinel.main import app
 from sentinel.mcp_server import verify
+import sentinel.tracing as tracing
 
 
 def test_health():
@@ -22,7 +23,8 @@ def test_contracts_roundtrip():
     assert Verdict.BLOCK.value == "BLOCK"
 
 
-def test_analyze_scenarios():
+def test_analyze_scenarios(tmp_path, monkeypatch):
+    monkeypatch.setattr(tracing, "AUDIT_PATH", tmp_path / "decisions.jsonl")
     client = TestClient(app)
     scenarios = json.loads(Path("data/scenarios.json").read_text(encoding="utf-8"))
 
@@ -35,6 +37,40 @@ def test_analyze_scenarios():
         assert body["error"] is None
         assert body["data"]["result"]["verdict"] == scenario["expected"]
         assert body["data"]["result"]["rule_fired"]
+        assert body["data"]["trace"]["trace_id"]
+
+
+def test_demo_routes_and_escalation(tmp_path, monkeypatch):
+    monkeypatch.setattr(tracing, "AUDIT_PATH", tmp_path / "decisions.jsonl")
+    client = TestClient(app)
+
+    demo = client.get("/demo/")
+    scenarios = client.get("/v1/scenarios").json()["data"]["scenarios"]
+    grey_zone = next(item for item in scenarios if item["id"] == "grey_zone")
+    analyzed = client.post("/v1/analyze", json=_scenario_payload(grey_zone)).json()
+    reviewed = client.post(
+        "/v1/escalations",
+        json={
+            "trace_id": analyzed["data"]["trace"]["trace_id"],
+            "decision": "BLOCK",
+            "reviewer": "test",
+        },
+    ).json()
+    audit = client.get("/v1/audit/latest").json()
+
+    assert demo.status_code == 200
+    assert analyzed["data"]["result"]["verdict"] == "ESCALATE"
+    assert reviewed["data"]["decision"] == "BLOCK"
+    assert audit["data"]["records"][0]["rule_fired"] == "grey_zone"
+
+
+def test_thrad_mock_returns_ad_request():
+    client = TestClient(app)
+    body = client.get("/v1/thrad/mock", params={"scenario_id": "false_rating"}).json()
+
+    assert body["success"] is True
+    assert body["data"]["ad_id"] == "false_rating"
+    assert "4.9 stars" in body["data"]["ad_creative"]
 
 
 def test_attestation_sign_and_verify(tmp_path):

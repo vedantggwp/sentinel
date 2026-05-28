@@ -17,6 +17,7 @@ venv/
 .ruff_cache/
 .coverage
 htmlcov/
+data/audit/
 
 # OS / editor
 .DS_Store
