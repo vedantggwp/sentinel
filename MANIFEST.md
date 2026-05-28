@@ -35,3 +35,4 @@
 - 2026-05-28: Added local audit tracing, seeded optimizer cases, Thrad mock fallback, and `/demo/` UI with escalation actions.
 - 2026-05-28: Added `DEMO.md` runbook for the presentation path and hosted deploy handoff.
 - 2026-05-28: Tightened Alpic config against current docs and enabled stateless JSON Streamable HTTP on the MCP server; env vars stay in dashboard settings.
+- 2026-05-28: Added a README Deploy on Alpic button to reduce the final dashboard deploy step.

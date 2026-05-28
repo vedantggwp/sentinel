@@ -6,6 +6,8 @@ When an AI assistant serves a sponsored suggestion, who checks it's safe for the
 
 Built for the Cursor × Thrad London Hackathon (May 2026).
 
+[![Deploy on Alpic](https://assets.alpic.ai/button.svg)](https://app.alpic.ai/new/clone?repositoryUrl=https%3A%2F%2Fgithub.com%2Fvedantggwp%2Fsentinel)
+
 ## How it works
 
 A request flows through a deterministic pipeline. The LLM stages produce **scores and evidence**; a deterministic gate makes the final APPROVE / BLOCK call — so every decision is reproducible and auditable.

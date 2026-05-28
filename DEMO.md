@@ -58,6 +58,12 @@ True
 
 ## Hosted deploy handoff
 
+Use the README's Deploy on Alpic button, or import:
+
+```text
+https://github.com/vedantggwp/sentinel
+```
+
 Alpic needs the repo connected with these build settings:
 
 - `installCommand`: `uv venv && uv pip install -r requirements.txt`
