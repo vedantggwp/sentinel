@@ -56,6 +56,31 @@ false_claim
 True
 ```
 
+## Streamable HTTP MCP check
+
+In a second terminal:
+
+```bash
+PORT=8765 uv run --python 3.12 --with-requirements requirements.txt python -m sentinel.mcp_server
+```
+
+Then run:
+
+```bash
+uv run --python 3.12 --with-requirements requirements.txt python scripts/smoke_mcp_http.py
+```
+
+Expected:
+
+```text
+tools=verify
+verdict=BLOCK
+rule_fired=false_claim
+signed=true
+```
+
+For Alpic, set `MCP_URL` to the deployed `/mcp` URL and run the same script.
+
 ## Hosted deploy handoff
 
 Use the README's Deploy on Alpic button, or import:

@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from sentinel.attest import create_attestation, verify_attestation, write_private_key
 from sentinel.contracts import AdRequest, PipelineResult, Verdict
 from sentinel.main import app
-from sentinel.mcp_server import verify
+from sentinel.mcp_server import mcp, verify
 import sentinel.tracing as tracing
 
 
@@ -103,6 +103,13 @@ def test_mcp_verify_tool_uses_same_gate():
 
     assert attestation.verdict == Verdict.BLOCK
     assert attestation.result.rule_fired == "urgency_manipulation"
+
+
+def test_mcp_server_settings_are_deploy_safe():
+    assert mcp.settings.host == "0.0.0.0"
+    assert mcp.settings.port == 8000
+    assert mcp.settings.stateless_http is True
+    assert mcp.settings.json_response is True
 
 
 def _scenario_payload(scenario: dict) -> dict:

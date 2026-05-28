@@ -6,6 +6,7 @@
 - `CLAUDE.md` — Claude-specific notes; imports AGENTS.md.
 - `README.md` — Public pitch + architecture diagram + quickstart.
 - `DEMO.md` — Local demo runbook, click path, API/MCP checks, and Alpic handoff.
+- `scripts/smoke_mcp_http.py` — Streamable HTTP MCP smoke script for local and deployed `/mcp` endpoints.
 - `sentinel/contracts.py` — Frozen interface: `AdRequest`, `Claim`, `PipelineResult`, `Attestation`, `Verdict`. Import; don't edit without a sync.
 - `sentinel/config.py` — Env-backed settings (pydantic-settings). All secrets via `.env`.
 - `sentinel/main.py` — FastAPI app; `/health` + `/v1/analyze` wired to the offline deterministic pipeline.
@@ -16,7 +17,9 @@
 - `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
 - `alpic.json` — Alpic deploy manifest with uv venv install/start commands for hosting the MCP `verify` tool (#12).
 - `ui/` — Vanilla split-screen demo UI served by FastAPI at `/demo/`.
-- `data/overmind_seed_cases.json` — 25 `{input, expected_output}` cases for optimizer/demo seeding.
+- `data/overmind_seed_cases.json` — 25 `{input, expected_output, expected_rule_fired}` eval cases for Overmind optimizer seeding.
+- `sentinel/eval.py` — Loads seed cases, runs the full pipeline, prints a JSON pass/fail summary (`python -m sentinel.eval`).
+- `tests/test_eval.py` — Parametrized regression over all 25 seed cases (verdict + rule_fired).
 - `data/policy.json` — Ineligible contexts, score dimensions, block/escalate thresholds.
 - `data/scenarios.json` — 4 seed scenarios = the acceptance test for the demo.
 - `tests/test_smoke.py` — Health, API scenario, attestation, and MCP wrapper smoke tests.
@@ -36,3 +39,5 @@
 - 2026-05-28: Added `DEMO.md` runbook for the presentation path and hosted deploy handoff.
 - 2026-05-28: Tightened Alpic config against current docs and enabled stateless JSON Streamable HTTP on the MCP server; env vars stay in dashboard settings.
 - 2026-05-28: Added a README Deploy on Alpic button to reduce the final dashboard deploy step.
+- 2026-05-28: Added Streamable HTTP MCP smoke script so local and Alpic `/mcp` endpoints can be verified with the same command.
+- 2026-05-28: Added `sentinel/eval.py` and `tests/test_eval.py` — 25-case regression suite with `expected_rule_fired` pins.
