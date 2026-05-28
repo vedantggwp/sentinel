@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #050506;
+  --surface: #0c0c0e;
+  --surface-2: #121214;
+  --surface-3: #1a1a1d;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --muted-2: #71717a;
+  --border: #27272a;
+  --border-subtle: #18181b;
+  --highlight: #e8ff6b;
+  --highlight-dim: rgba(232, 255, 107, 0.12);
+  --accent: #9d8df1;
+  --accent-dim: rgba(157, 141, 241, 0.14);
+  --accent-hot: #ff6b4a;
+  --langfuse-pink: #f472b6;
+  --approve: #5eead4;
+  --block: #ff6b4a;
+  --review: #fbbf24;
+  --warn: #fbbf24;
+  --grid-line: rgba(255, 255, 255, 0.04);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+
+/* Langfuse-style grid backdrop */
+.bg-grid {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.text-highlight-marker {
+  background: var(--highlight);
+  color: #0a0a0a;
+  padding: 0 0.2em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
