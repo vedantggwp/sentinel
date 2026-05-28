@@ -19,6 +19,9 @@ venv/
 htmlcov/
 data/audit/
 
+# Cursor local hook runtime (continual-learning index/state)
+.cursor/hooks/state/
+
 # OS / editor
 .DS_Store
 .idea/

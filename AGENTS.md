@@ -37,3 +37,16 @@ The final pass/fail (`decide_placement`) is **deterministic code**. LLM stages o
 ## Secrets
 
 All keys (Thrad/Tavily/Overmind/OpenAI/Anthropic + the attestation signing key) live in `.env` only — never commit, print, or log them.
+
+## Learned User Preferences
+
+- Before changing gate thresholds or `data/policy.json`, run the 25-case eval regression (`pytest tests/test_eval.py -q` or `python -m sentinel.eval`).
+- For multi-agent Sentinel work, prefer pstack `/poteto-mode` playbooks and `poteto-agent` subagents over generic subagents.
+- When Codex, Claude, or other agents are executing in parallel, expect a supervisor pass: pytest + evals, deterministic-gate boundary, and PLAN/README vs repo before trusting their output.
+
+## Learned Workspace Facts
+
+- Layne nominally owns `sentinel/integrations/` and `ui/`; Ved may backfill that lane—check git authorship before assuming Layne landed a change.
+- Regression eval dataset: `data/overmind_seed_cases.json` (25 cases with `expected_output` and `expected_rule_fired`); runner in `sentinel/eval.py`, CI in `tests/test_eval.py`.
+- Run tests with the project venv (Python 3.12): `.venv/bin/python -m pytest -q`—bare `pytest` on system Python often fails (missing FastAPI).
+- Feature branches created via Cursor diff-tab flows use the `cursor/` prefix (e.g. `cursor/eval-regression-suite`).

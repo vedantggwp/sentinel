@@ -41,3 +41,4 @@
 - 2026-05-28: Added a README Deploy on Alpic button to reduce the final dashboard deploy step.
 - 2026-05-28: Added Streamable HTTP MCP smoke script so local and Alpic `/mcp` endpoints can be verified with the same command.
 - 2026-05-28: Added `sentinel/eval.py` and `tests/test_eval.py` — 25-case regression suite with `expected_rule_fired` pins.
+- 2026-05-28: Updated `AGENTS.md` — continual-learning learned preferences/facts; gitignored `.cursor/hooks/state/`.
