@@ -73,7 +73,7 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 1. **Gate-first vertical slice (done 2026-05-28):** `context_gate` (#2) + safety scoring + `decide_placement` (#5) wired through `/v1/analyze`. All 4 seed scenarios return expected verdicts with deterministic `rule_fired`; Thrad DistilBERT is now an optional pinned classifier signal with heuristic fallback.
 2. **Truth layer (offline fixture done; Tavily adapter next):** `claim_extractor` (#3) + cached `fact_verifier` (#4) make the false-rating BLOCK evidence-backed without network.
 3. **Receipt (sign/verify helper done; runtime key setup next):** `attestation` (#6) signs when `ATTESTATION_PRIVATE_KEY_PATH` exists; tests prove verify passes and tamper fails.
-4. **Reach (local MCP wrapper done; deploy next):** `mcp_server` (#8) exposes `verify` over `streamable-http`; then Alpic (#12).
+4. **Reach (done — deployed + live-verified):** `mcp_server` (#8) exposes `verify` over `streamable-http`; deployed on Alpic (#12), live at `https://sentinel-74667ec0.alpic.live/mcp`.
 5. **Observability + polish (local trace/UI done; hosted Overmind next):** `tracing.py` (#7) persists local audit JSONL and ships 25 seed cases; UI (#10/#11) consumes the trace and receipt.
 
 **Reliability rule:** every external call (Tavily, Thrad, LLM) has a cached/mock fallback. The live demo must run with the network unplugged.
@@ -85,4 +85,4 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 - One BLOCK shows: vulnerability flag OR a fact-checked false claim with `actual_value` + `source_url`. **Done.**
 - Response carries an `Attestation`; verify passes and tamper fails when the local ed25519 key is configured. **Done.**
 - Demo UI runs at `/demo/` and covers APPROVE/BLOCK/ESCALATE with receipt + trace. **Done locally.**
-- `verify` reachable as a deployed MCP tool. **Local server wrapper + `alpic.json` done; Alpic dashboard deploy next.**
+- `verify` reachable as a deployed MCP tool. **Done — live at `https://sentinel-74667ec0.alpic.live/mcp`; remote `verify()` returns BLOCK · `false_claim` with a signature that verifies.**
