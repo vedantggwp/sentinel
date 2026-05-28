@@ -55,7 +55,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     evaluation: {
       traceId: "ovm_demo_laptop_8f2a",
       verdict: "APPROVE",
-      ruleFired: "all_checks_passed",
+      ruleFired: "passed",
       latencyMs: 1240,
       candidateAd: {
         headline: "Acme Pro 14",
@@ -187,7 +187,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     evaluation: {
       traceId: "ovm_demo_rating_7d19",
       verdict: "BLOCK",
-      ruleFired: "claim_truthfulness_failed",
+      ruleFired: "false_claim",
       latencyMs: 2100,
       candidateAd: {
         headline: "SonicMax ANC Pro",
@@ -221,7 +221,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
           detail: "FAILED — advertised 4.9★ vs ~3.2★ on Amazon (Tavily).",
         },
         decision: {
-          detail: "BLOCK — claim_truthfulness_failed.",
+          detail: "BLOCK — false_claim.",
         },
       }),
     },
@@ -253,7 +253,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     evaluation: {
       traceId: "ovm_demo_urgency_3e88",
       verdict: "BLOCK",
-      ruleFired: "manufactured_urgency",
+      ruleFired: "urgency_manipulation",
       latencyMs: 1050,
       candidateAd: {
         headline: "TripSure Insurance",
@@ -277,7 +277,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
             "Urgency score 0.94 — manufactured scarcity patterns matched.",
         },
         factcheck: { detail: "No factual claims to verify." },
-        decision: { detail: "BLOCK — manufactured_urgency." },
+        decision: { detail: "BLOCK — urgency_manipulation." },
       }),
     },
   },

@@ -4,14 +4,32 @@ Split-screen hackathon demo: **conversation (left)** + **Overmind trace & receip
 
 ## Run locally
 
+**Terminal 1 — API (required for live mode)**
+
+```bash
+cd ..  # repo root
+uv run --python 3.12 --with-requirements requirements.txt uvicorn sentinel.main:app --reload --port 8000
+```
+
+**Terminal 2 — Next.js UI**
+
 ```bash
 cd frontend
+cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:8000
 npm install
 npm run dev
 ```
 
 - Landing: [http://localhost:3000](http://localhost:3000)
-- Trace console (demo): [http://localhost:3000/demo](http://localhost:3000/demo)
+- Trace console: [http://localhost:3000/demo](http://localhost:3000/demo)
+
+The demo shows an **api** badge when connected to the backend; **offline** uses local fixtures only.
+
+**Ved’s vanilla UI (reference implementation)**
+
+```text
+http://127.0.0.1:8000/demo/
+```
 
 ## Demo flow
 
