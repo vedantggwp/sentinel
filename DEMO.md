@@ -60,8 +60,8 @@ True
 
 Alpic needs the repo connected with these settings:
 
-- `installCommand`: `uv pip install -r requirements.txt`
-- `startCommand`: `python -m sentinel.mcp_server`
+- `installCommand`: `uv venv && uv pip install -r requirements.txt`
+- `startCommand`: `uv run python -m sentinel.mcp_server`
 - `PORT`: `8000`
 - `ENV`: `production`
 - `ATTESTATION_PRIVATE_KEY_PEM`: paste the generated PEM contents as a secret

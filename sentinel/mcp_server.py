@@ -8,7 +8,13 @@ from sentinel.contracts import AdRequest, Attestation
 from sentinel.pipeline import run_pipeline
 
 
-mcp = FastMCP("Sentinel", host="0.0.0.0", port=settings.port)
+mcp = FastMCP(
+    "Sentinel",
+    host="0.0.0.0",
+    port=settings.port,
+    json_response=True,
+    stateless_http=True,
+)
 
 
 @mcp.tool()

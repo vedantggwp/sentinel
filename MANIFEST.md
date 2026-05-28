@@ -14,7 +14,7 @@
 - `sentinel/integrations/thrad_client.py` — Thrad staging adapter with deterministic mock fallback.
 - `sentinel/pipeline/` — Offline context gate, claim extractor, fixture fact verifier, safety judge, and deterministic `decide_placement`.
 - `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
-- `alpic.json` — Alpic deploy manifest (install/start commands) for hosting the MCP `verify` tool (#12).
+- `alpic.json` — Alpic deploy manifest with uv venv install/start commands for hosting the MCP `verify` tool (#12).
 - `ui/` — Vanilla split-screen demo UI served by FastAPI at `/demo/`.
 - `data/overmind_seed_cases.json` — 25 `{input, expected_output}` cases for optimizer/demo seeding.
 - `data/policy.json` — Ineligible contexts, score dimensions, block/escalate thresholds.
@@ -34,3 +34,4 @@
 - 2026-05-28: Made attestation deploy-ready — signing key loads from `ATTESTATION_PRIVATE_KEY_PEM` env when no key file exists; added `alpic.json`. Deployed `verify()` now returns signed (not silently unsigned) receipts.
 - 2026-05-28: Added local audit tracing, seeded optimizer cases, Thrad mock fallback, and `/demo/` UI with escalation actions.
 - 2026-05-28: Added `DEMO.md` runbook for the presentation path and hosted deploy handoff.
+- 2026-05-28: Tightened Alpic config against current docs and enabled stateless JSON Streamable HTTP on the MCP server.
