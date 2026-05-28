@@ -1,7 +1,7 @@
 """Unit tests for the pure-stdlib eval statistics, pinned to reference values."""
 import math
 
-from sentinel.eval_stats import mcnemar_exact, wilson_interval
+from sentinel.eval_stats import cohens_kappa, mcnemar_exact, pearson, wilson_interval
 
 
 # --- Wilson interval (plain) ------------------------------------------------
@@ -49,3 +49,32 @@ def test_mcnemar_no_disagreement_is_one():
 
 def test_mcnemar_symmetric_disagreement_not_significant():
     assert mcnemar_exact(5, 5) == 1.0
+
+
+# --- Cohen's kappa ----------------------------------------------------------
+
+def test_unweighted_kappa_reference_value():
+    # Classic 2x2: agreement matrix [[20,5],[10,15]] -> kappa = 0.4.
+    a = [1] * 25 + [2] * 25
+    b = [1] * 20 + [2] * 5 + [1] * 10 + [2] * 15
+    assert math.isclose(cohens_kappa(a, b, categories=[1, 2]), 0.4, abs_tol=1e-9)
+
+
+def test_quadratic_weighted_kappa_reference_value():
+    # 3x3 with all disagreements one step off the diagonal -> quadratic kappa = 5/6.
+    a = [1] * 6 + [2] * 6 + [3] * 6
+    b = [1] * 5 + [2] + [1] + [2] * 4 + [3] + [2] + [3] * 5
+    k = cohens_kappa(a, b, categories=[1, 2, 3], weights="quadratic")
+    assert math.isclose(k, 5 / 6, abs_tol=1e-9)
+
+
+def test_kappa_perfect_and_degenerate():
+    assert cohens_kappa([1, 2, 3], [1, 2, 3], categories=[1, 2, 3]) == 1.0
+    assert cohens_kappa([], []) == 1.0  # nothing to disagree about
+
+
+# --- Pearson ----------------------------------------------------------------
+
+def test_pearson_perfect_and_flat():
+    assert math.isclose(pearson([1, 2, 3], [2, 4, 6]), 1.0, abs_tol=1e-9)
+    assert pearson([1, 1, 1], [1, 2, 3]) == 0.0  # no variance -> defined as 0

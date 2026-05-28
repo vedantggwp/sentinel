@@ -20,12 +20,15 @@
 - `ui/` — Vanilla split-screen demo UI served by FastAPI at `/demo/`.
 - `data/overmind_seed_cases.json` — 25 `{input, expected_output, expected_rule_fired}` eval cases for Overmind optimizer seeding.
 - `sentinel/eval.py` — Runs seed (gated) + adversarial (measurement) splits; prints accuracy+95% CI, confusion matrix, per-verdict P/R/F1, and weighted cost (`python -m sentinel.eval`).
-- `sentinel/eval_stats.py` — Pure-stdlib eval statistics: Wilson 95% CI (plain + Yates), exact McNemar paired test. No numpy/scipy.
+- `sentinel/eval_stats.py` — Pure-stdlib eval statistics: Wilson 95% CI (plain + Yates), exact McNemar, Cohen's weighted kappa, Pearson. No numpy/scipy.
 - `sentinel/eval_metrics.py` — Auxiliary metrics: 3x3 confusion matrix, per-verdict precision/recall/f1, safety-first weighted cost.
+- `sentinel/calibrate.py` — Phase 5 L4 judge calibration: per-dimension quadratic-weighted kappa (judge vs human gold, target >=0.6) + length-bias probe, over a swappable JudgeFn seam (`python -m sentinel.calibrate`).
+- `data/safety_gold.jsonl` — Bootstrap human-label gold set for judge calibration (1-5 per dimension); seed only, needs >=200 traces / 2-3 annotators.
 - `data/eval_cost_matrix.json` — Cost[truth][prediction]; safety-first asymmetry (missed BLOCK = 10, ESCALATE = cheap valve).
 - `data/adversarial_cases.json` — Held-out split (negation/paraphrase/obfuscation/benign-trigger/minor/homoglyph) with correct verdict + `currently_passes` snapshot.
 - `tests/test_eval.py` — Parametrized regression over all 25 seed cases (verdict + rule_fired).
-- `tests/test_eval_stats.py` — Pins Wilson/McNemar to published reference values.
+- `tests/test_eval_stats.py` — Pins Wilson/McNemar/kappa/Pearson to published reference values.
+- `tests/test_calibrate.py` — Calibration harness tests: judge seam catches perfect vs miscalibrated judges; characterizes today's heuristic judge.
 - `tests/test_eval_metrics.py` — Confusion matrix, P/R, and safety-first cost-matrix invariants.
 - `tests/test_adversarial.py` — Characterization of the held-out split; breaks loudly when a case's behaviour changes; asserts held-out accuracy trails fitted.
 - `tests/test_gate_robustness.py` — Score-jitter sweep proving the gate never skips a band (no silent BLOCK<->APPROVE) and boundaries match policy.
@@ -35,6 +38,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-05-28: Built Phase 5 L4 judge calibration harness (`calibrate.py`, `data/safety_gold.jsonl`) — per-dimension quadratic-weighted Cohen's kappa vs human gold (target >=0.6) + length-bias probe over a swappable JudgeFn seam (defaults to the live pipeline's L4 scores). Seed gold: overall kappa 0.85, honestly flags annotator floor not met. Added kappa+Pearson to `eval_stats.py`. Not yet a CI gate (no LLM judge wired; gold is a seed).
 - 2026-05-28: Upgraded evals to May-2026 standard — added Wilson CI + confusion matrix + per-verdict P/R/F1 + safety-first cost matrix (`eval_stats.py`, `eval_metrics.py`); split-aware runner; held-out adversarial split (fitted 100% vs held-out 30%); gate-jitter robustness tests. Zero new deps. Sources in `PLAN.md` / memory.
 - 2026-05-28: Created `PLAN.md` — reviewed plan + research findings (Tavily/Overmind/MCP/Alpic/adtech-standards) + parallel partition.
 - 2026-05-28: Created `MANIFEST.md` — per CLAUDE.md file-manifest rule.
