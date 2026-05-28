@@ -5,6 +5,7 @@
 - `AGENTS.md` — Shared agent contract (Karpathy rules + deterministic-gate hard rule). Source of truth.
 - `CLAUDE.md` — Claude-specific notes; imports AGENTS.md.
 - `README.md` — Public pitch + architecture diagram + quickstart.
+- `DEMO.md` — Local demo runbook, click path, API/MCP checks, and Alpic handoff.
 - `sentinel/contracts.py` — Frozen interface: `AdRequest`, `Claim`, `PipelineResult`, `Attestation`, `Verdict`. Import; don't edit without a sync.
 - `sentinel/config.py` — Env-backed settings (pydantic-settings). All secrets via `.env`.
 - `sentinel/main.py` — FastAPI app; `/health` + `/v1/analyze` wired to the offline deterministic pipeline.
@@ -32,3 +33,4 @@
 - 2026-05-28: Aligned `decide_placement` with the policy-backed gate contract and exhaustive branch tests.
 - 2026-05-28: Made attestation deploy-ready — signing key loads from `ATTESTATION_PRIVATE_KEY_PEM` env when no key file exists; added `alpic.json`. Deployed `verify()` now returns signed (not silently unsigned) receipts.
 - 2026-05-28: Added local audit tracing, seeded optimizer cases, Thrad mock fallback, and `/demo/` UI with escalation actions.
+- 2026-05-28: Added `DEMO.md` runbook for the presentation path and hosted deploy handoff.
