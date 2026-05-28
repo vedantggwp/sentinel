@@ -73,7 +73,7 @@ export function TraceSpanTree({
         className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-[var(--surface-2)]"
       >
         <span className="w-3 text-[var(--muted-2)]">{expanded ? "▼" : "▶"}</span>
-        <span className="text-[var(--accent)]">⬡</span>
+        <span className="text-[var(--highlight)]">⬡</span>
         <span className="flex-1 font-medium text-[var(--foreground)]">
           sentinel.evaluate
         </span>

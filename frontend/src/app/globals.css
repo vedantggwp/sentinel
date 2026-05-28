@@ -12,10 +12,9 @@
   --border-subtle: #18181b;
   --highlight: #e8ff6b;
   --highlight-dim: rgba(232, 255, 107, 0.12);
-  --accent: #9d8df1;
-  --accent-dim: rgba(157, 141, 241, 0.14);
+  --accent: #5eead4;
+  --accent-dim: rgba(94, 234, 212, 0.12);
   --accent-hot: #ff6b4a;
-  --langfuse-pink: #f472b6;
   --approve: #5eead4;
   --block: #ff6b4a;
   --review: #fbbf24;
@@ -42,7 +41,7 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--highlight) 35%, transparent);
 }
 
 * {
