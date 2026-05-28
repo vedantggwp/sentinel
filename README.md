@@ -1,63 +1,158 @@
-# 🛡️ Sentinel
+# Sentinel
 
-**An independent safety & claim-verification layer for ads served inside AI conversations.**
+Sentinel is a safety and verification layer for sponsored recommendations inside AI conversations.
 
-When an AI assistant serves a sponsored suggestion, who checks it's safe for the moment — and truthful? Sentinel sits between the ad network and the user: it reads the conversation context, fact-checks the ad's claims against the live web, and emits a **signed, auditable verdict** before the ad ever reaches the person.
+It answers one question before an ad is shown:
 
-Built for the Cursor × Thrad London Hackathon (May 2026).
+> Is this ad safe for this conversation, and are its claims true?
+
+For ad networks, AI assistants, and sponsors, Sentinel turns ad placement into a replayable decision instead of a black box. It checks the user's conversational context, verifies the ad's factual claims, applies deterministic policy rules, and returns a signed receipt that explains exactly why the ad was approved, blocked, or escalated.
+
+Built for the [Cursor x Thrad London Hackathon](https://cursor-thrads-london-2026.vercel.app/), May 2026.
 
 [![Deploy on Alpic](https://assets.alpic.ai/button.svg)](https://app.alpic.ai/new/clone?repositoryUrl=https%3A%2F%2Fgithub.com%2Fvedantggwp%2Fsentinel)
 
-## How it works
+![Sentinel demo showing an approved sponsored recommendation with a signed receipt](docs/assets/layne-ui/demo.png)
 
-A request flows through a deterministic pipeline. The LLM stages produce **scores and evidence**; a deterministic gate makes the final APPROVE / BLOCK call — so every decision is reproducible and auditable.
+## What It Does
 
+Sentinel sits between an ad bid/request and the assistant response. Before the sponsored message reaches the user, Sentinel produces:
+
+- **A placement verdict:** `APPROVE`, `BLOCK`, or `ESCALATE`.
+- **A policy reason:** the deterministic rule that fired, such as `false_claim`, `vulnerability_auto_block`, or `urgency_manipulation`.
+- **Evidence:** extracted ad claims, verification results, source hashes, context flags, and safety scores.
+- **A signed receipt:** an ed25519 attestation that can be stored, audited, and replayed.
+- **An MCP tool:** `verify`, so agents and hosted MCP clients can call the same safety gate before serving an ad.
+
+The result is outcome-led safety infrastructure: sponsors can prove responsible placement, AI apps can avoid unsafe ad moments, and users are protected from manipulative or false recommendations.
+
+## Why It Matters
+
+AI conversations create ad moments that ordinary ad checks do not understand. A recommendation that is harmless in a product search can be harmful in a vulnerable conversation. A claim that sounds persuasive can still be false. A model-generated placement explanation is not enough if the final decision cannot be audited.
+
+Sentinel separates those responsibilities:
+
+- LLM-style stages may extract claims and score evidence.
+- The final placement decision is deterministic code.
+- Every verdict persists the inputs, claims, evidence, scores, source hashes, and rule fired.
+
+That boundary is the core of the project: **models can inform the decision, but they never make the final pass/fail call.**
+
+## Hackathon Stack
+
+Sentinel is built for the sell-side and measurement track: helping AI publishers decide when conversational inventory is safe to monetize, then proving the decision after the fact.
+
+The sponsor products are part of the actual system path, not logos on a slide:
+
+| Product | How Sentinel uses it |
+| --- | --- |
+| **Thrad AI** | The core ad-infrastructure context: Sentinel gates sponsored answers before they are placed in conversational inventory. It can also use Thrad's open-source DistilBERT conversation classifier, with a deterministic heuristic fallback. |
+| **Tavily** | Live web verification for factual claims extracted from ad creative. |
+| **Overmind** | Decision tracing and policy feedback. Sentinel emits decision spans when an Overmind key is configured. |
+| **Alpic** | One-click hosted deployment path for the MCP `verify` tool. |
+| **Cursor** | Built and iterated in Cursor as the hackathon development environment. |
+
+MCP is the delivery surface, not a sponsor: Sentinel exposes `verify` as a callable tool so an agent, publisher app, or hosted Alpic deployment can check an ad before serving it.
+
+## How It Works
+
+```text
+Ad request
+  -> Context gate
+     Thrad DistilBERT or deterministic fallback checks whether this is an eligible moment for any ad.
+  -> Claim extraction
+     Verifiable claims are pulled from the ad creative.
+  -> Fact verification
+     Claims are checked against live or fixture-backed sources.
+  -> Safety scoring
+     Contextual safety, truthfulness, urgency, and tone mimicry are scored.
+  -> Deterministic gate
+     Policy code returns APPROVE, BLOCK, or ESCALATE.
+  -> Signed attestation
+     The verdict, rule, evidence, and hashes are signed for audit.
+  -> Trace
+     The decision is persisted locally and can emit an Overmind span.
 ```
-ad (Thrad bid-request)
-  → 1. Context Gate      Thrad DistilBERT + heuristic fallback: is this moment safe for ANY ad?
-  → 2. Claim Extraction  pull verifiable claims from the ad creative
-  → 3. Fact Verification check each claim against the live web (Tavily)
-  → 4. Safety Judge      score contextual safety, claim truthfulness, urgency, tone-mimicry
-  → Deterministic Gate   APPROVE / BLOCK from scores + hard rules (vulnerability = auto-block)
-  → Signed Attestation   ed25519 receipt keyed to the ad: verdict, evidence, source hashes
-  → Overmind trace       every decision traced, policy-scored, improved over time
-```
 
-The signed attestation is exposed as an **MCP tool** (`verify`), so any agent can call Sentinel before serving an ad.
+The demo scenarios cover the important cases:
 
-Set `CONTEXT_CLASSIFIER_BACKEND=auto` to let the context gate use Thrad's open-source
-[`thrad-distilbert-conversation-classifier`](https://huggingface.co/Thrad/thrad-distilbert-conversation-classifier)
-when the ONNX runtime dependencies and model cache are available. It records
-the model label, label index, and confidence as signed evidence; deterministic Sentinel code
-maps policy-threshold Thrad-banned intents (`D`, `J`, `M`) into ineligible
-context flags. If the model is disabled, missing, or offline, the keyword
-heuristic keeps tests, the demo, and the MCP tool working.
+- Clean product recommendation: `APPROVE`
+- Vulnerable conversation: `BLOCK`
+- False rating claim: `BLOCK`
+- Manipulative urgency: `BLOCK`
+- Ambiguous safety case: `ESCALATE`
 
 ## Quickstart
 
 ```bash
-cp .env.example .env                 # fill in API keys (never commit .env)
+cp .env.example .env
 uv pip install -r requirements.txt
+.venv/bin/python -m pytest -q
 uvicorn sentinel.main:app --reload --port 8000
-open http://localhost:8000/demo/      # demo UI
-pytest -q                            # tests
+open http://localhost:8000/demo/
 ```
 
-For a signed local receipt, generate a development ed25519 key before running
-the API:
+For signed local receipts, generate a development ed25519 key:
 
 ```bash
 python -c "from sentinel.attest import write_private_key; write_private_key('keys/attest_ed25519')"
 ```
 
-## Stack
+Never commit `.env`, signing keys, or API keys.
 
-FastAPI (Python 3.12) · **Thrad DistilBERT** (conversation context classification) · **Tavily** (live claim verification) · **Overmind** (decision tracing + policy optimization) · **Alpic** (MCP deployment) · built in **Cursor**. Vanilla HTML/JS UI, no build step.
+## MCP Verification
 
-## Architecture principle
+Sentinel exposes the same pipeline through a FastMCP `verify` tool:
 
-**The LLM may score; it never decides.** The final gate is deterministic code, and every verdict ships with a signed, replayable receipt. That's the line between a safety *slogan* and safety *infrastructure*.
+```bash
+PORT=8765 uv run --python 3.12 --with-requirements requirements.txt python -m sentinel.mcp_server
+uv run --python 3.12 --with-requirements requirements.txt python scripts/smoke_mcp_http.py
+```
+
+Expected smoke output:
+
+```text
+tools=verify
+verdict=BLOCK
+rule_fired=false_claim
+signed=true
+```
+
+For hosted deployment, use the Alpic button above or import this repository into Alpic and expose the MCP server at `/mcp`.
+
+## Current Verification
+
+The core gate and demo behavior are covered by deterministic tests:
+
+```bash
+.venv/bin/python -m pytest tests/test_eval.py tests/test_gate.py tests/test_smoke.py -q
+```
+
+Current focused sanity check:
+
+```text
+47 passed
+```
+
+The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.
+
+## Project Shape
+
+- `sentinel/pipeline/` contains the four-stage safety pipeline and deterministic gate.
+- `sentinel/contracts.py` defines the shared request/result/attestation contracts.
+- `sentinel/attest/` signs and verifies receipts.
+- `sentinel/mcp_server.py` exposes the MCP `verify` tool.
+- `sentinel/tracing.py` records local audit JSONL and optional Overmind spans.
+- `ui/` contains the vanilla HTML/JS demo served by FastAPI.
+- `docs/assets/` contains current demo screenshots.
+- `DEMO.md` has the presenter runbook and hosted deployment handoff.
+
+## Design Principle
+
+Sentinel is not trying to make ads more persuasive. It is trying to make sponsored AI placements accountable.
+
+The final verdict is deterministic, replayable, and signed. If a placement is blocked, the system can show the exact rule and evidence. If a placement is approved, the sponsor can show why it passed.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
