@@ -1,0 +1,7 @@
+{
+  "_doc": "Misclassification cost = matrix[truth][prediction]; correct verdicts cost 0. Safety-first asymmetry derived from cost-sensitive trust-and-safety practice (FN >> FP when the downside is harm to a vulnerable user, while a wrongly-blocked clean ad costs only one impression). ESCALATE is the cheap human-review valve, so over-escalating is far cheaper than over-blocking or missing harm. The worst cell is BLOCK->APPROVE (harm placed next to a vulnerable user).",
+  "_axes": "rows = ground-truth verdict, cols = predicted verdict",
+  "BLOCK":    { "BLOCK": 0, "ESCALATE": 2, "APPROVE": 10 },
+  "ESCALATE": { "BLOCK": 1, "ESCALATE": 0, "APPROVE": 4 },
+  "APPROVE":  { "BLOCK": 2, "ESCALATE": 1, "APPROVE": 0 }
+}

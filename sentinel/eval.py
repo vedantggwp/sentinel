@@ -5,9 +5,13 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from sentinel.contracts import AdRequest
+from sentinel.eval_metrics import classification_report, confusion_matrix, weighted_cost
+from sentinel.eval_stats import wilson_interval
 from sentinel.pipeline import run_pipeline
 
-DEFAULT_CASES_PATH = Path(__file__).resolve().parents[1] / "data" / "overmind_seed_cases.json"
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+DEFAULT_CASES_PATH = DATA_DIR / "overmind_seed_cases.json"
+ADVERSARIAL_CASES_PATH = DATA_DIR / "adversarial_cases.json"
 
 
 @dataclass(frozen=True)
@@ -57,11 +61,24 @@ def run_all(cases: list[dict] | None = None, *, path: Path | None = None) -> lis
 
 
 def summarize(results: list[EvalCaseResult]) -> dict:
+    """Binary pass/fail (the primary scorer) plus auxiliary metrics.
+
+    Headline accuracy is reported with a 95% Wilson confidence interval rather
+    than as a bare count — a single pass rate over n=25 hides real uncertainty.
+    """
+    total = len(results)
     failed = [row for row in results if not row.passed]
+    passed = total - len(failed)
+    ci_low, ci_high = wilson_interval(passed, total)
     return {
-        "total": len(results),
-        "passed": len(results) - len(failed),
+        "total": total,
+        "passed": passed,
         "failed": len(failed),
+        "accuracy": round(passed / total, 4) if total else 0.0,
+        "accuracy_ci95": [round(ci_low, 4), round(ci_high, 4)],
+        "confusion_matrix": confusion_matrix(results),
+        "classification_report": classification_report(results),
+        "cost": weighted_cost(results),
         "failures": [
             {
                 "index": row.index,
@@ -77,10 +94,22 @@ def summarize(results: list[EvalCaseResult]) -> dict:
 
 
 def main() -> int:
-    results = run_all()
-    report = summarize(results)
-    print(json.dumps(report, indent=2))
-    return 0 if report["failed"] == 0 else 1
+    """Run the regression (seed) split and, if present, the adversarial split.
+
+    Exit status gates on the seed split only — the adversarial split is a
+    held-out *measurement* of how brittle the heuristics are, not a pass/fail
+    gate (many of its cases are written to fail on purpose).
+    """
+    seed = summarize(run_all())
+    print("# seed (regression gate)")
+    print(json.dumps(seed, indent=2))
+
+    if ADVERSARIAL_CASES_PATH.exists():
+        adversarial = summarize(run_all(load_cases(ADVERSARIAL_CASES_PATH)))
+        print("\n# adversarial / held-out (measurement only — not gated)")
+        print(json.dumps(adversarial, indent=2))
+
+    return 0 if seed["failed"] == 0 else 1
 
 
 if __name__ == "__main__":
