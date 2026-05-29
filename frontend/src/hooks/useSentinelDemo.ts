@@ -18,16 +18,32 @@ import type {
 
 export type ApiMode = "live" | "offline";
 
+interface UseSentinelDemoOptions {
+  initialScenarioId?: string;
+  capture?: boolean;
+}
+
 function adStateForVerdict(verdict: EvaluationResult["verdict"]): AdSlotState {
   if (verdict === "APPROVE") return "approved";
   return "blocked";
 }
 
-export function useSentinelDemo() {
-  const [scenarioId, setScenarioId] = useState(DEMO_SCENARIOS[0].id);
-  const [adState, setAdState] = useState<AdSlotState>("idle");
-  const [steps, setSteps] = useState<TraceStep[]>([]);
-  const [result, setResult] = useState<EvaluationResult | null>(null);
+export function useSentinelDemo({
+  initialScenarioId,
+  capture = false,
+}: UseSentinelDemoOptions = {}) {
+  const initialId = getInitialScenarioId(initialScenarioId);
+  const initialScenario = getScenario(initialId) ?? DEMO_SCENARIOS[0];
+  const [scenarioId, setScenarioId] = useState(initialId);
+  const [adState, setAdState] = useState<AdSlotState>(() =>
+    capture ? adStateForVerdict(initialScenario.evaluation.verdict) : "idle",
+  );
+  const [steps, setSteps] = useState<TraceStep[]>(() =>
+    capture ? initialScenario.evaluation.steps : [],
+  );
+  const [result, setResult] = useState<EvaluationResult | null>(() =>
+    capture ? initialScenario.evaluation : null,
+  );
   const [isRunning, setIsRunning] = useState(false);
   const [apiMode, setApiMode] = useState<ApiMode>("offline");
   const [apiHint, setApiHint] = useState<string | null>(null);
@@ -37,6 +53,7 @@ export function useSentinelDemo() {
     getScenario(scenarioId) ?? DEMO_SCENARIOS[0];
 
   const refreshApiStatus = useCallback(async () => {
+    if (capture) return false;
     const ok = await checkHealth();
     setApiMode(ok ? "live" : "offline");
     setApiHint(
@@ -45,11 +62,15 @@ export function useSentinelDemo() {
         : "Backend offline — using demo fixtures. Start: uvicorn sentinel.main:app --port 8000",
     );
     return ok;
-  }, []);
+  }, [capture]);
 
   useEffect(() => {
-    refreshApiStatus();
-  }, [refreshApiStatus]);
+    if (capture) return;
+    const id = window.setTimeout(() => {
+      void refreshApiStatus();
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [capture, refreshApiStatus]);
 
   const selectScenario = useCallback((id: string) => {
     setScenarioId(id);
@@ -128,9 +149,13 @@ export function useSentinelDemo() {
   }, [isRunning, scenario]);
 
   useEffect(() => {
-    void runEvaluation();
+    if (capture) return;
+    const id = window.setTimeout(() => {
+      void runEvaluation();
+    }, 0);
+    return () => window.clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run pipeline per scenario
-  }, [scenarioId]);
+  }, [scenarioId, capture]);
 
   return {
     scenarios: DEMO_SCENARIOS,
@@ -148,4 +173,11 @@ export function useSentinelDemo() {
     mismatch,
     refreshApiStatus,
   };
+}
+
+function getInitialScenarioId(explicitId?: string) {
+  if (explicitId) return getScenario(explicitId)?.id ?? DEMO_SCENARIOS[0].id;
+  if (typeof window === "undefined") return DEMO_SCENARIOS[0].id;
+  const requested = new URLSearchParams(window.location.search).get("scenario");
+  return getScenario(requested ?? "")?.id ?? DEMO_SCENARIOS[0].id;
 }

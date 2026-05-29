@@ -12,7 +12,31 @@ Built for the [Cursor x Thrad London Hackathon](https://cursor-thrads-london-202
 
 [![Deploy on Alpic](https://assets.alpic.ai/button.svg)](https://app.alpic.ai/new/clone?repositoryUrl=https%3A%2F%2Fgithub.com%2Fvedantggwp%2Fsentinel)
 
-![Sentinel demo showing an approved sponsored recommendation with a signed receipt](docs/assets/layne-ui/demo.png)
+<p align="center">
+  <video src="docs/assets/demo-flow.mp4" poster="docs/assets/demo-poster.png" width="100%" controls playsinline>
+    <a href="docs/assets/demo-flow.mp4">Download the Sentinel demo video</a>
+  </video>
+</p>
+
+## See it run
+
+A predatory loan ad meets a vulnerable conversation; a fake 4.9★ rating meets the live web. Sentinel reads the moment, fact-checks the claim, and the **deterministic gate** makes the call — every step traced, every verdict signed.
+
+<p align="center">
+  <img src="docs/assets/gifs/console-tour.gif" alt="Sentinel trace console — sidebar of traces, conversation context, hierarchical audit trail, and the signed VRF verification panel" width="100%" />
+</p>
+
+**The deterministic pipeline, in a real trace** — context gate → Thrad bid → vulnerability check → policy → Tavily fact-check → deterministic gate → Overmind log. The LLM stages score; the gate decides.
+
+<p align="center">
+  <img src="docs/assets/gifs/pipeline.gif" alt="Audit-trail span tree: a fake 4.9-star claim fails Tavily fact-check and the deterministic gate fires BLOCK" width="100%" />
+</p>
+
+| BLOCK — false claim, refuted on the live web | APPROVE — clean trace, signed receipt |
+| :---: | :---: |
+| <img src="docs/assets/gifs/block-verdict.gif" alt="Deterministic gate blocks a false 4.9-star claim; signed ed25519 receipt, rule_fired claim_truthfulness_failed" width="100%" /> | <img src="docs/assets/gifs/approve-receipt.gif" alt="Clean trace approved; signed ed25519 receipt, rule_fired all_checks_passed" width="100%" /> |
+
+> Every verdict ships with a signed, replayable `ed25519` receipt — verdict, rule fired, evidence, and source hashes. Captured live from the trace console (`/demo`).
 
 ## What It Does
 
@@ -89,7 +113,10 @@ cp .env.example .env
 uv pip install -r requirements.txt
 .venv/bin/python -m pytest -q
 uvicorn sentinel.main:app --reload --port 8000
-open http://localhost:8000/demo/
+cd frontend
+npm install
+npm run dev
+open http://localhost:3000/demo
 ```
 
 For signed local receipts, generate a development ed25519 key:
@@ -143,8 +170,9 @@ The full seed regression lives in `data/overmind_seed_cases.json` and is exercis
 - `sentinel/attest/` signs and verifies receipts.
 - `sentinel/mcp_server.py` exposes the MCP `verify` tool.
 - `sentinel/tracing.py` records local audit JSONL and optional Overmind spans.
-- `ui/` contains the vanilla HTML/JS demo served by FastAPI.
-- `docs/assets/` contains current demo screenshots.
+- `frontend/` contains the Next.js landing page and trace console.
+- `ui/` contains the older vanilla HTML/JS FastAPI demo.
+- `docs/assets/` contains current demo video and screenshots.
 - `DEMO.md` has the presenter runbook and hosted deployment handoff.
 
 ## Design Principle

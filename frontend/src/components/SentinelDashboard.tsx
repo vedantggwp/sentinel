@@ -5,7 +5,15 @@ import { TraceDetailPanel } from "@/components/TraceDetailPanel";
 import { TraceSidebar } from "@/components/TraceSidebar";
 import { useSentinelDemo } from "@/hooks/useSentinelDemo";
 
-export function SentinelDashboard() {
+interface SentinelDashboardProps {
+  initialScenarioId?: string;
+  capture?: boolean;
+}
+
+export function SentinelDashboard({
+  initialScenarioId,
+  capture = false,
+}: SentinelDashboardProps) {
   const {
     scenarios,
     scenario,
@@ -21,7 +29,7 @@ export function SentinelDashboard() {
     apiHint,
     mismatch,
     refreshApiStatus,
-  } = useSentinelDemo();
+  } = useSentinelDemo({ initialScenarioId, capture });
 
   return (
     <div className="flex h-full min-h-0 bg-[var(--bg)]">

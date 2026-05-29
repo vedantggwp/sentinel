@@ -18,6 +18,8 @@
 - `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
 - `alpic.json` — Alpic deploy manifest with uv venv install/start commands for hosting the MCP `verify` tool (#12).
 - `ui/` — Vanilla split-screen demo UI served by FastAPI at `/demo/`.
+- `docs/assets/gifs/` — README demo GIFs (+ MP4 source) animated from retina `/demo` captures: `console-tour`, `pipeline`, `block-verdict`, `approve-receipt`.
+- `docs/assets/layne-ui/v2/` — Retina (3840×2160) source captures of Layne's Next.js UI: landing + 4 post-verdict trace states (approve/block-anxiety/block-rating/block-urgency).
 - `data/overmind_seed_cases.json` — 25 `{input, expected_output, expected_rule_fired}` eval cases for Overmind optimizer seeding.
 - `sentinel/eval.py` — Runs seed (gated) + adversarial (measurement) splits; prints accuracy+95% CI, confusion matrix, per-verdict P/R/F1, and weighted cost (`python -m sentinel.eval`).
 - `sentinel/eval_stats.py` — Pure-stdlib eval statistics: Wilson 95% CI (plain + Yates), exact McNemar, Cohen's weighted kappa, Pearson. No numpy/scipy.
@@ -38,6 +40,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-05-28: Added 4 README demo GIFs (`docs/assets/gifs/`) + retina source captures (`docs/assets/layne-ui/v2/`). GIFs are eased pan/zoom camera moves over real `/demo` post-verdict states (console tour, deterministic pipeline span tree, BLOCK+signed receipt, APPROVE+signed receipt); embedded in a new README "See it run" section. Full motion-graphics launch video deferred per Ved.
 - 2026-05-28: Built Phase 5 L4 judge calibration harness (`calibrate.py`, `data/safety_gold.jsonl`) — per-dimension quadratic-weighted Cohen's kappa vs human gold (target >=0.6) + length-bias probe over a swappable JudgeFn seam (defaults to the live pipeline's L4 scores). Seed gold: overall kappa 0.85, honestly flags annotator floor not met. Added kappa+Pearson to `eval_stats.py`. Not yet a CI gate (no LLM judge wired; gold is a seed).
 - 2026-05-28: Upgraded evals to May-2026 standard — added Wilson CI + confusion matrix + per-verdict P/R/F1 + safety-first cost matrix (`eval_stats.py`, `eval_metrics.py`); split-aware runner; held-out adversarial split (fitted 100% vs held-out 30%); gate-jitter robustness tests. Zero new deps. Sources in `PLAN.md` / memory.
 - 2026-05-28: Created `PLAN.md` — reviewed plan + research findings (Tavily/Overmind/MCP/Alpic/adtech-standards) + parallel partition.
