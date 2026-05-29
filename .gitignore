@@ -27,6 +27,9 @@ frontend/node_modules/
 frontend/.next/
 frontend/out/
 
+# Video subproject (~574 MB) — not part of the deployed app; ignore entirely
+sentinel-video/
+
 # OS / editor
 .DS_Store
 .idea/
