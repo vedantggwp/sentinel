@@ -76,7 +76,7 @@ The sponsor products are part of the actual system path, not logos on a slide:
 
 | Product | How Sentinel uses it |
 | --- | --- |
-| **Thrad AI** | The core ad-infrastructure context: Sentinel gates sponsored answers before they are placed in conversational inventory. It can also use Thrad's open-source DistilBERT conversation classifier, with a deterministic heuristic fallback. |
+| **Thrad AI** | The core ad-infrastructure context: Sentinel gates sponsored answers before they are placed in conversational inventory. It can normalize live-shaped Thrad bid payloads with deterministic fixture fallback, and can use Thrad's open-source DistilBERT conversation classifier with heuristic fallback. |
 | **Tavily** | Public-v1 roadmap integration for live factual claim checks. The current repo uses deterministic offline/fixture verification so CI and demos do not require network access. |
 | **Overmind** | Optional decision-span export. Local audit JSONL is the source of truth, and Sentinel emits Overmind spans only when a key is configured. |
 | **Alpic** | One-click hosted deployment path for the MCP `verify` tool. |
@@ -84,7 +84,7 @@ The sponsor products are part of the actual system path, not logos on a slide:
 
 MCP is the delivery surface, not a sponsor: Sentinel exposes `verify` as a callable tool so an agent, publisher app, or hosted Alpic deployment can check an ad before serving it.
 
-Current integration truth: the backend verification path is offline deterministic today. Live Tavily verification with fixture fallback is tracked in [#13](https://github.com/vedantggwp/sentinel/issues/13); optional Overmind span emission is tracked in [#14](https://github.com/vedantggwp/sentinel/issues/14); Thrad bid normalization hardening is tracked in [#15](https://github.com/vedantggwp/sentinel/issues/15).
+Current integration truth: the backend verification path is offline deterministic today. Live Tavily verification with fixture fallback is tracked in [#13](https://github.com/vedantggwp/sentinel/issues/13); optional Overmind span emission is tested and closed in [#14](https://github.com/vedantggwp/sentinel/issues/14); Thrad bid normalization with deterministic fixture fallback is tested and closed in [#15](https://github.com/vedantggwp/sentinel/issues/15).
 
 ## How It Works
 
@@ -160,13 +160,13 @@ For hosted deployment, use the Alpic button above or import this repository into
 The core gate and demo behavior are covered by deterministic tests:
 
 ```bash
-.venv/bin/python -m pytest tests/test_eval.py tests/test_gate.py tests/test_smoke.py tests/test_public_api_contract.py tests/test_tracing.py -q
+.venv/bin/python -m pytest tests/test_eval.py tests/test_gate.py tests/test_smoke.py tests/test_public_api_contract.py tests/test_tracing.py tests/test_thrad_client.py -q
 ```
 
 Current full test suite:
 
 ```text
-105 passed
+110 passed
 ```
 
 The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.

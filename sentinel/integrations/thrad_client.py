@@ -37,15 +37,76 @@ async def _fetch_live_ad(conversation: str) -> AdRequest | None:
         return None
 
 
-def _normalize(payload: dict, conversation: str) -> AdRequest:
-    ad = payload.get("ad", payload)
-    return AdRequest(
-        ad_id=str(ad.get("id") or ad.get("ad_id") or "thrad-live"),
-        conversation=conversation,
-        ad_creative=str(ad.get("creative") or ad.get("ad_creative") or ad.get("copy")),
-        advertiser=ad.get("advertiser") or ad.get("brand"),
-        landing_url=ad.get("landing_url") or ad.get("url"),
+def _normalize(payload: dict, conversation: str) -> AdRequest | None:
+    if not isinstance(payload, dict):
+        return None
+
+    ad = _candidate_ad(payload)
+    if not isinstance(ad, dict):
+        return None
+
+    creative = _first_text(
+        ad,
+        "creative",
+        "ad_creative",
+        "copy",
+        "body",
+        "text",
+        "description",
+        "adm",
     )
+    if not creative:
+        return None
+
+    return AdRequest(
+        ad_id=_first_text(ad, "id", "ad_id", "bid_id", "creative_id") or "thrad-live",
+        conversation=conversation,
+        ad_creative=creative,
+        advertiser=_first_text(ad, "advertiser", "brand", "advertiser_name", "adomain"),
+        landing_url=_first_text(ad, "landing_url", "url", "click_url", "nurl"),
+    )
+
+
+def _candidate_ad(payload: dict) -> dict | None:
+    if isinstance(payload.get("ad"), dict):
+        return payload["ad"]
+    if isinstance(payload.get("bid"), dict):
+        return payload["bid"]
+    if isinstance(payload.get("ads"), list) and payload["ads"]:
+        return payload["ads"][0] if isinstance(payload["ads"][0], dict) else None
+
+    seatbids = payload.get("seatbid")
+    if isinstance(seatbids, list) and seatbids:
+        bids = seatbids[0].get("bid") if isinstance(seatbids[0], dict) else None
+        if isinstance(bids, list) and bids:
+            return bids[0] if isinstance(bids[0], dict) else None
+
+    return payload
+
+
+def _first_text(ad: dict, *keys: str) -> str | None:
+    for key in keys:
+        value = ad.get(key)
+        if value is None and isinstance(ad.get("ext"), dict):
+            value = ad["ext"].get(key)
+        text = _string_value(value)
+        if text:
+            return text
+    return None
+
+
+def _string_value(value: object) -> str | None:
+    if isinstance(value, str):
+        text = value.strip()
+        return text or None
+    if isinstance(value, (int, float)):
+        return str(value)
+    if isinstance(value, list):
+        for item in value:
+            text = _string_value(item)
+            if text:
+                return text
+    return None
 
 
 def _mock_ad_request(conversation: str, scenario_id: str | None = None) -> AdRequest:

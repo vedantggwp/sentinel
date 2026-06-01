@@ -22,7 +22,7 @@
 - `sentinel/main.py` — FastAPI app; `/health` + `/v1/analyze` wired to the offline deterministic pipeline.
 - `sentinel/mcp_server.py` — FastMCP `verify` tool over streamable HTTP; wraps the same deterministic pipeline.
 - `sentinel/tracing.py` — Local audit JSONL persistence plus optional Overmind span emission.
-- `sentinel/integrations/thrad_client.py` — Thrad staging adapter with deterministic mock fallback.
+- `sentinel/integrations/thrad_client.py` — Thrad staging adapter with live-shaped payload normalization and deterministic mock fallback.
 - `sentinel/pipeline/` — Thrad DistilBERT context classifier with heuristic fallback, claim extractor, fixture fact verifier, safety judge, and deterministic `decide_placement`.
 - `sentinel/pipeline/thrad_context_classifier.py` — Lazy ONNX wrapper for `Thrad/thrad-distilbert-conversation-classifier`, pinned to a Hugging Face revision and mapped to A-M intent labels.
 - `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
@@ -49,9 +49,11 @@
 - `tests/test_smoke.py` — Health, API scenario, attestation, and MCP wrapper smoke tests.
 - `tests/test_public_api_contract.py` — Public API/MCP contract tests for route envelopes, bounded audit queries, escalation decisions, and signed receipt verification.
 - `tests/test_tracing.py` — Local audit and optional Overmind span tests proving export success/failure never changes API verdicts.
+- `tests/test_thrad_client.py` — Thrad live-shaped bid normalization and timeout/500/malformed fallback tests.
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Hardened Thrad live-shaped bid normalization for issue #15 with OpenRTB-style payload support and timeout/500/malformed fallback tests.
 - 2026-06-01: Added trace tests for issue #14: local audit persistence without Overmind, mocked Overmind span attributes when configured, and API success when Overmind raises.
 - 2026-06-01: Hardened `/v1/audit/latest` with bounded `limit` validation and added public API/MCP contract tests for issue #16.
 - 2026-06-01: Added `CODE_OF_CONDUCT.md`, `SUPPORT.md`, and a general issue template to improve public maintainer readiness and contributor routing.
