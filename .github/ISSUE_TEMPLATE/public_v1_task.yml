@@ -1,0 +1,52 @@
+name: Public v1 Task
+description: Propose a scoped public-v1 improvement with tests and truth impact.
+title: "Public v1: "
+labels: ["public-v1"]
+body:
+  - type: textarea
+    id: claim
+    attributes:
+      label: Product Claim
+      description: After this change, Sentinel can...
+      placeholder: After this change, Sentinel can...
+    validations:
+      required: true
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Lane
+      options:
+        - gate
+        - evidence
+        - integration
+        - receipt
+        - trace
+        - API
+        - MCP
+        - UI/demo
+        - docs
+        - eval
+        - release
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Required Tests
+      description: What failing test should be written first?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What evidence proves this is done?
+    validations:
+      required: true
+  - type: textarea
+    id: public_truth
+    attributes:
+      label: Public Truth Impact
+      description: Does README, ROADMAP, DEMO, or docs wording need to change?
+    validations:
+      required: true

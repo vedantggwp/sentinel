@@ -1,0 +1,62 @@
+name: Bug Report
+description: Report incorrect behavior in Sentinel's API, MCP tool, gate, receipt, or trace path.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping make Sentinel safer. Do not paste secrets, signing keys, raw private audit logs, or sensitive user conversations.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should Sentinel have returned or recorded?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: Include verdict, rule fired, route/tool, and relevant non-sensitive output.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected Surface
+      options:
+        - Deterministic gate
+        - API
+        - MCP verify tool
+        - Signed receipt
+        - Audit trace
+        - Demo UI
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction Steps
+      description: Minimal steps or request payload needed to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification Commands
+      description: Commands you ran, such as pytest or sentinel.eval.
+      placeholder: |
+        python -m pytest -q
+        python -m sentinel.eval
+    validations:
+      required: false

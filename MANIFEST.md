@@ -8,6 +8,8 @@
 - `ROADMAP.md` — Public-v1 maintainer backlog, current baseline, Codex/API-credit use plan, and non-goals.
 - `DEMO.md` — Local demo runbook, click path, API/MCP checks, and Alpic handoff.
 - `.github/workflows/ci.yml` — GitHub Actions gate for backend tests and the seed eval report on push/PR/manual runs.
+- `.github/ISSUE_TEMPLATE/` — Bug report and public-v1 task templates that require reproduction, tests, acceptance evidence, and public-truth impact.
+- `.github/pull_request_template.md` — PR review checklist for public claims, deterministic-gate safety, verification commands, and integration truth.
 - `docs/PUBLIC_V1_TDD_FLYWHEEL.md` — Public-v1 execution loop: TDD lanes, tracking rules, sub-agent packets, release checks, and maintenance cadence.
 - `docs/CODEX_APP_PUBLIC_V1_OPERATING_MODEL.md` — How to run Sentinel public-v1 through Codex app: orchestrator/worker/explorer roles, automations, plugins, waves, and governance.
 - `scripts/smoke_mcp_http.py` — Streamable HTTP MCP smoke script for local and deployed `/mcp` endpoints.
@@ -44,6 +46,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Added GitHub issue templates and a PR template so future external contributions capture reproduction steps, test evidence, public-claim impact, and deterministic-gate safety before review.
 - 2026-06-01: Added GitHub Actions CI for backend tests plus the seed eval report, and added `ROADMAP.md` to make the public-v1 maintainer backlog and Codex/API-credit use plan reviewer-visible.
 - 2026-05-30: Added `docs/CODEX_APP_PUBLIC_V1_OPERATING_MODEL.md` — the Codex-app execution model for public-v1 work, covering orchestrator vs worker agents, plugin boundaries, recurring automation prompts, parallel waves, and production governance.
 - 2026-05-30: Added `docs/PUBLIC_V1_TDD_FLYWHEEL.md` — an executable public-v1 plan covering ground-truth integration states, red/green/refactor lane gates, what to track vs ignore, sub-agent packets for Tavily/Overmind/Thrad/LLM/public docs, release checks, and maintenance rhythm.
