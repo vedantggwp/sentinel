@@ -90,7 +90,7 @@ function buildSteps(data: AnalyzeResponse): TraceStep[] {
     },
     {
       id: "factcheck",
-      label: "Fact-check (Tavily)",
+      label: "Claim verification",
       status: "done",
       detail: factDetail,
     },
@@ -102,7 +102,7 @@ function buildSteps(data: AnalyzeResponse): TraceStep[] {
     },
     {
       id: "overmind",
-      label: "Overmind trace logged",
+      label: "Trace persisted",
       status: "done",
       detail: data.attestation.signature ? "signed attestation" : "unsigned",
     },

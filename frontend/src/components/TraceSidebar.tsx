@@ -46,7 +46,7 @@ export function TraceSidebar({
           </Link>
         </div>
         <p className="mt-2 font-mono text-[10px] text-[var(--muted-2)]">
-          Overmind traces
+          Audit traces
         </p>
       </div>
 

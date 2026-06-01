@@ -53,7 +53,7 @@ export function TraceSpanTree({
           No observations yet
         </p>
         <p className="mt-2 max-w-xs text-sm text-[var(--muted)]">
-          Run evaluation to ingest a hierarchical trace into Overmind
+          Run evaluation to persist a hierarchical local audit trace
         </p>
       </div>
     );
@@ -79,7 +79,7 @@ export function TraceSpanTree({
         </span>
         <TimingBar ms={rootMs || 1} maxMs={maxMs} />
         {rootStatus === "running" && (
-          <span className="text-[10px] text-[var(--review)]">live</span>
+          <span className="text-[10px] text-[var(--review)]">running</span>
         )}
       </button>
 

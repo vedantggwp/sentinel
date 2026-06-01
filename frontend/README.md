@@ -1,6 +1,6 @@
 # Sentinel Frontend
 
-Split-screen hackathon demo: **conversation (left)** + **Overmind trace & receipt (right)**.
+Split-screen hackathon demo: **conversation (left)** + **audit trace & receipt (right)**.
 
 ## Run locally
 
@@ -42,13 +42,13 @@ http://127.0.0.1:8000/demo/
 | Path | Purpose |
 |------|---------|
 | `src/components/` | UI panels (chat, ad slot, trace, receipt) |
-| `src/data/scenarios.ts` | Demo fixtures until `POST /v1/analyze` is live |
+| `src/data/scenarios.ts` | Demo fixtures with API mapping when `POST /v1/analyze` is reachable |
 | `src/lib/types.ts` | Types aligned with `sentinel/contracts.py` |
 | `src/hooks/useSentinelDemo.ts` | Demo state + step animation |
 
 ## Backend integration (for Ved)
 
-When `POST /v1/analyze` returns real data, replace the demo engine call in `useSentinelDemo` with:
+When `POST /v1/analyze` is reachable, `useSentinelDemo` maps the API response into the same trace UI shape:
 
 ```ts
 fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/analyze`, {

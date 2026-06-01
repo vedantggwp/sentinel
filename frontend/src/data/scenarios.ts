@@ -17,9 +17,9 @@ function steps(
       status: "done",
     },
     { id: "policy", label: "Safety policy evaluation", status: "done" },
-    { id: "factcheck", label: "Fact-check (Tavily)", status: "done" },
+    { id: "factcheck", label: "Claim verification", status: "done" },
     { id: "decision", label: "Deterministic gate", status: "done" },
-    { id: "overmind", label: "Overmind trace logged", status: "done" },
+    { id: "overmind", label: "Trace persisted", status: "done" },
   ];
   return base.map((s) => ({
     ...s,
@@ -53,7 +53,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     },
     expectedVerdict: "APPROVE",
     evaluation: {
-      traceId: "ovm_demo_laptop_8f2a",
+      traceId: "aud_demo_laptop_8f2a",
       verdict: "APPROVE",
       ruleFired: "passed",
       latencyMs: 1240,
@@ -116,7 +116,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     },
     expectedVerdict: "BLOCK",
     evaluation: {
-      traceId: "ovm_demo_anxiety_c41b",
+      traceId: "aud_demo_anxiety_c41b",
       verdict: "BLOCK",
       ruleFired: "vulnerability_auto_block",
       latencyMs: 890,
@@ -163,7 +163,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
   {
     id: "false_rating",
     title: "Blocked — false claim",
-    description: "Tavily finds rating mismatch; truthfulness rule fires.",
+    description: "Fixture evidence finds a rating mismatch; truthfulness rule fires.",
     messages: [
       {
         id: "1",
@@ -185,7 +185,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     },
     expectedVerdict: "BLOCK",
     evaluation: {
-      traceId: "ovm_demo_rating_7d19",
+      traceId: "aud_demo_rating_7d19",
       verdict: "BLOCK",
       ruleFired: "false_claim",
       latencyMs: 2100,
@@ -203,22 +203,22 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         ],
         vulnerability: { signals: [], severity: "low" },
         policySummary:
-          "Claim truthfulness score below threshold. Advertised 4.9★ conflicts with live marketplace data.",
+          "Claim truthfulness score below threshold. Advertised 4.9★ conflicts with fixture-backed evidence.",
         claims: [
           {
             text: "4.9 stars on Amazon",
             verified: false,
-            actualValue: "~3.2 stars (Amazon listing aggregate)",
-            sourceTitle: "Amazon — SonicMax ANC Pro",
-            sourceUrl: "https://amazon.example/sonicmax",
+            actualValue: "3.2 stars (offline fixture)",
+            sourceTitle: "Offline fixture — SonicMax ANC Pro",
+            sourceUrl: "offline://claim/rating-overstated",
             snippet:
-              "Current aggregate rating 3.2/5 from 1,847 reviews (fetched via Tavily).",
+              "Deterministic fixture source reports 3.2/5 for the scenario.",
           },
         ],
       },
       steps: steps({
         factcheck: {
-          detail: "FAILED — advertised 4.9★ vs ~3.2★ on Amazon (Tavily).",
+          detail: "FAILED — advertised 4.9★ vs 3.2★ fixture evidence.",
         },
         decision: {
           detail: "BLOCK — false_claim.",
@@ -251,7 +251,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     },
     expectedVerdict: "BLOCK",
     evaluation: {
-      traceId: "ovm_demo_urgency_3e88",
+      traceId: "aud_demo_urgency_3e88",
       verdict: "BLOCK",
       ruleFired: "urgency_manipulation",
       latencyMs: 1050,

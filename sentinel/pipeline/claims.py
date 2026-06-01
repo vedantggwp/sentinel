@@ -10,7 +10,7 @@ RATING_RE = re.compile(r"\b\d(?:\.\d)?\s*(?:stars?|/5)\b", re.IGNORECASE)
 SCARCITY_TERMS = {"left", "remaining"}
 SCARCITY_WINDOW_CHARS = 120
 
-# Offline heuristic: a near-perfect rating we cannot substantiate without the live web.
+# Offline heuristic: a near-perfect rating we cannot substantiate without external web evidence.
 # Real verification (#4, Tavily) replaces this. Keying on claim CONTENT — not the advertiser —
 # means an unsubstantiated 4.9*/#1 ad is caught no matter who sends it.
 OVERSTATED_RATING = 4.9

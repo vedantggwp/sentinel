@@ -72,10 +72,10 @@ export function ReceiptPanel({ result }: ReceiptPanelProps) {
       {receipt.claims && receipt.claims.length > 0 && (
         <div>
           <span className="font-mono text-[10px] text-[var(--muted-2)]">
-            / TAV
+            / EVD
           </span>
           <p className="mt-0.5 text-[10px] text-[var(--muted)]">
-            Tavily fact-check
+            Claim verification
           </p>
           <div className="mt-2 space-y-2">
             {receipt.claims.map((claim) => (
@@ -123,7 +123,7 @@ export function ReceiptPanel({ result }: ReceiptPanelProps) {
           <span>trace_id={result.traceId}</span>
           <span>latency={result.latencyMs}ms</span>
           <span>sig=ed25519</span>
-          <span className="text-[var(--highlight)]">overmind.synced</span>
+          <span className="text-[var(--highlight)]">trace.persisted</span>
         </div>
       </footer>
     </div>

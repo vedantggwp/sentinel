@@ -46,7 +46,7 @@ export function TraceDetailPanel({
           <span className="text-[var(--foreground)]">Traces</span>
           <span>/</span>
           <span className="truncate text-[var(--accent)]">
-            {traceId.replace("ovm_demo_", "").slice(0, 12)}
+            {traceId.replace("aud_demo_", "").slice(0, 12)}
           </span>
           <span
             className={`rounded px-1.5 py-0.5 text-[10px] ${

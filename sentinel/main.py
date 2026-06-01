@@ -2,7 +2,7 @@
 
 The /v1/analyze pipeline is built layer-by-layer (see the GitHub issues):
 context_gate -> claim_extractor -> fact_verifier -> safety_judge
--> deterministic gate -> signed attestation -> Overmind trace.
+-> deterministic gate -> signed attestation -> local audit trace.
 """
 import json
 from pathlib import Path

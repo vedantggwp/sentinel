@@ -30,9 +30,9 @@ function stepLabel(id: TraceStepId): string {
     thrad: "Thrad bid received",
     vulnerability: "Vulnerability signal check",
     policy: "Safety policy evaluation",
-    factcheck: "Fact-check (Tavily)",
+    factcheck: "Claim verification",
     decision: "Deterministic gate",
-    overmind: "Overmind trace logged",
+    overmind: "Trace persisted",
   };
   return labels[id];
 }

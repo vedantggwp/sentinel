@@ -5,9 +5,9 @@ import { LandingNav } from "@/components/landing/LandingNav";
 import { ModelLogoCloud } from "@/components/landing/ModelLogoCloud";
 
 const CHANGELOG = [
-  { title: "Tavily fact-check span", when: "today" },
+  { title: "Fixture claim check", when: "today" },
   { title: "Deterministic gate v2", when: "2d ago" },
-  { title: "Overmind trace export", when: "5d ago" },
+  { title: "Optional trace export", when: "5d ago" },
   { title: "Thrad bid adapter", when: "1w ago" },
 ];
 
@@ -19,13 +19,13 @@ const TOC = [
   { id: "cta", label: "Get started" },
 ];
 
-const INTEGRATIONS = ["Thrad", "Tavily", "Overmind", "FastAPI", "MCP"];
+const INTEGRATIONS = ["Thrad", "Tavily roadmap", "Overmind optional", "FastAPI", "MCP"];
 
 const PRIMITIVES = [
   { code: "CTX", title: "Context gate", desc: "Vulnerability signals before any ad is considered." },
-  { code: "TAV", title: "Tavily verify", desc: "Live web evidence for ratings, prices, statistics." },
+  { code: "EVD", title: "Claim verify", desc: "Offline fixture-backed evidence today; live Tavily is on the public-v1 roadmap." },
   { code: "GTE", title: "Deterministic gate", desc: "LLMs score. Code decides. Always auditable." },
-  { code: "LOG", title: "Overmind trace", desc: "Every verdict logged for policy optimization." },
+  { code: "LOG", title: "Audit trace", desc: "Every verdict is persisted locally; Overmind export is optional when configured." },
 ];
 
 function TracePreviewCard() {
@@ -55,7 +55,7 @@ function TracePreviewCard() {
           <span>18ms</span>
         </li>
         <li className="flex justify-between text-[var(--muted)]">
-          <span>tavily.search</span>
+          <span>claim.verify.offline</span>
           <span className="text-[var(--highlight)]">890ms</span>
         </li>
         <li className="flex justify-between text-[var(--approve)]">
@@ -81,9 +81,9 @@ export function LandingPage() {
                 <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--muted-2)]">
                   Open source
                 </p>
-                <p className="mt-2 text-2xl font-semibold tabular-nums">★ 128</p>
+                <p className="mt-2 text-2xl font-semibold tabular-nums">95</p>
                 <p className="mt-1 text-xs text-[var(--muted)]">
-                  MIT · hackathon build
+                  pytest cases · MIT
                 </p>
               </div>
 
@@ -136,9 +136,10 @@ export function LandingPage() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-[var(--muted)]">
-                Debug unsafe ads in minutes. Intercept Thrad candidates, verify
-                claims with Tavily, and ship a signed receipt before anything
-                reaches the user. Any model, deterministic gate.
+                Debug unsafe ads in minutes. Evaluate Thrad-style candidates,
+                check claims against fixture-backed evidence, and ship a signed
+                receipt before anything reaches the user. Any model,
+                deterministic gate.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -171,8 +172,9 @@ export function LandingPage() {
                 One connected workflow
               </h2>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-[var(--muted)]">
-                Context gate, claim extraction, Tavily verification, safety
-                judge, deterministic gate, signed attestation, Overmind trace.
+                Context gate, claim extraction, fixture-backed verification,
+                safety judge, deterministic gate, signed attestation, local
+                audit trace with optional Overmind export.
               </p>
               <ol className="mt-8 space-y-4">
                 {[
@@ -258,7 +260,7 @@ export function LandingPage() {
               <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-8 text-center">
                 <SentinelLogo size="lg" className="justify-center" />
                 <p className="mx-auto mt-4 max-w-md text-sm text-[var(--muted)]">
-                  Enter the trace console: live pipeline, accept / review /
+                  Enter the trace console: local pipeline, accept / review /
                   decline, signed audit trail.
                 </p>
                 <Link

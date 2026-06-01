@@ -22,9 +22,9 @@ export function spanOperation(id: TraceStepId): string {
     thrad: "thrad.bid_request",
     vulnerability: "sentinel.vulnerability_check",
     policy: "sentinel.policy_eval",
-    factcheck: "tavily.search",
+    factcheck: "claim.verify.offline",
     decision: "sentinel.deterministic_gate",
-    overmind: "overmind.trace_log",
+    overmind: "sentinel.trace_persist",
   };
   return ops[id];
 }

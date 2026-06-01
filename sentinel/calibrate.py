@@ -36,7 +36,7 @@ JudgeFn = Callable[[AdRequest], Mapping[str, float]]
 
 
 def pipeline_judge(ad: AdRequest) -> Mapping[str, float]:
-    """Default judge: the L4 scores the live pipeline produces today."""
+    """Default judge: the L4 scores the current pipeline produces today."""
     return run_pipeline(ad).scores
 
 

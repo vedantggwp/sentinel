@@ -71,7 +71,7 @@ Purpose: track video-related files so agents do not confuse temporary capture/sc
 - Recaptured Layne's real `/demo` at retina (3840×2160) via browser-harness + `?scenario=<id>&capture=1` into `docs/assets/layne-ui/v2/` (landing + 4 verdict states).
 - Built 4 GIFs with ffmpeg `zoompan` (eased smoothstep camera moves) over the real captures, then Lanczos + diff-palette → GIF. No new deps; ffmpeg 8.0.1, no gifski.
   - `docs/assets/gifs/console-tour.gif` (1100px) — L→R pan + push-in across the full BLOCK console.
-  - `docs/assets/gifs/pipeline.gif` (1000px) — push-in on the audit-trail span tree, settling on `tavily.search` FAILED → `deterministic_gate` BLOCK.
+  - `docs/assets/gifs/pipeline.gif` (1000px) — push-in on the audit-trail span tree, settling on fixture-backed claim verification FAILED → `deterministic_gate` BLOCK.
   - `docs/assets/gifs/block-verdict.gif` (1000px) — zoom into BLOCKED verdict + signed `ed25519` receipt (`claim_truthfulness_failed`).
   - `docs/assets/gifs/approve-receipt.gif` (1000px) — zoom into APPROVE + signed receipt (`all_checks_passed`).
   - `.mp4` siblings kept alongside each GIF (smaller, for future `<video>` embeds).

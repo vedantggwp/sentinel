@@ -5,7 +5,7 @@
 
 ## The one-sentence pitch
 
-An independent safety layer for ads inside AI conversations: it reads the moment, fact-checks the ad's claims against the live web, and emits a **signed, replayable APPROVE/BLOCK receipt** — where **the LLM only scores and deterministic code decides.**
+An independent safety layer for ads inside AI conversations: it reads the moment, checks ad claims against fixture-backed evidence today, and emits a **signed, replayable APPROVE/BLOCK receipt** — where **the LLM only scores and deterministic code decides.** Live web claim checks are tracked as a public-v1 integration.
 
 ## Hard rule (non-negotiable)
 

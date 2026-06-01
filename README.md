@@ -26,23 +26,23 @@ Built for the [Cursor x Thrad London Hackathon](https://cursor-thrads-london-202
 
 ## See it run
 
-A predatory loan ad meets a vulnerable conversation; a fake 4.9★ rating meets the live web. Sentinel reads the moment, fact-checks the claim, and the **deterministic gate** makes the call — every step traced, every verdict signed.
+A predatory loan ad meets a vulnerable conversation; a fake 4.9★ rating meets the fixture-backed verifier. Sentinel reads the moment, checks the claim, and the **deterministic gate** makes the call — every step traced, every verdict signed.
 
 <p align="center">
   <img src="docs/assets/gifs/console-tour.gif" alt="Sentinel trace console — sidebar of traces, conversation context, hierarchical audit trail, and the signed VRF verification panel" width="100%" />
 </p>
 
-**The deterministic pipeline, in a real trace** — context gate → Thrad bid → vulnerability check → policy → Tavily fact-check → deterministic gate → Overmind log. The LLM stages score; the gate decides.
+**The deterministic pipeline, in a real trace** — context gate → Thrad-style bid → vulnerability check → policy → fixture-backed claim check → deterministic gate → local audit trace. The LLM stages score; the gate decides.
 
 <p align="center">
-  <img src="docs/assets/gifs/pipeline.gif" alt="Audit-trail span tree: a fake 4.9-star claim fails Tavily fact-check and the deterministic gate fires BLOCK" width="100%" />
+  <img src="docs/assets/gifs/pipeline.gif" alt="Audit-trail span tree: a fake 4.9-star claim fails fixture-backed verification and the deterministic gate fires BLOCK" width="100%" />
 </p>
 
-| BLOCK — false claim, refuted on the live web | APPROVE — clean trace, signed receipt |
+| BLOCK — false claim, refuted by fixture-backed evidence | APPROVE — clean trace, signed receipt |
 | :---: | :---: |
 | <img src="docs/assets/gifs/block-verdict.gif" alt="Deterministic gate blocks a false 4.9-star claim; signed ed25519 receipt, rule_fired claim_truthfulness_failed" width="100%" /> | <img src="docs/assets/gifs/approve-receipt.gif" alt="Clean trace approved; signed ed25519 receipt, rule_fired all_checks_passed" width="100%" /> |
 
-> Every verdict ships with a signed, replayable `ed25519` receipt — verdict, rule fired, evidence, and source hashes. Captured live from the trace console (`/demo`).
+> Every verdict ships with a signed, replayable `ed25519` receipt — verdict, rule fired, evidence, and source hashes. Captured from the local trace console (`/demo`).
 
 ## What It Does
 
@@ -77,12 +77,14 @@ The sponsor products are part of the actual system path, not logos on a slide:
 | Product | How Sentinel uses it |
 | --- | --- |
 | **Thrad AI** | The core ad-infrastructure context: Sentinel gates sponsored answers before they are placed in conversational inventory. It can also use Thrad's open-source DistilBERT conversation classifier, with a deterministic heuristic fallback. |
-| **Tavily** | Live web verification for factual claims extracted from ad creative. |
-| **Overmind** | Decision tracing and policy feedback. Sentinel emits decision spans when an Overmind key is configured. |
+| **Tavily** | Public-v1 roadmap integration for live factual claim checks. The current repo uses deterministic offline/fixture verification so CI and demos do not require network access. |
+| **Overmind** | Optional decision-span export. Local audit JSONL is the source of truth, and Sentinel emits Overmind spans only when a key is configured. |
 | **Alpic** | One-click hosted deployment path for the MCP `verify` tool. |
 | **Cursor** | Built and iterated in Cursor as the hackathon development environment. |
 
 MCP is the delivery surface, not a sponsor: Sentinel exposes `verify` as a callable tool so an agent, publisher app, or hosted Alpic deployment can check an ad before serving it.
+
+Current integration truth: the backend verification path is offline deterministic today. Live Tavily verification with fixture fallback is tracked in [#13](https://github.com/vedantggwp/sentinel/issues/13); optional Overmind span emission is tracked in [#14](https://github.com/vedantggwp/sentinel/issues/14); Thrad bid normalization hardening is tracked in [#15](https://github.com/vedantggwp/sentinel/issues/15).
 
 ## How It Works
 
@@ -93,7 +95,7 @@ Ad request
   -> Claim extraction
      Verifiable claims are pulled from the ad creative.
   -> Fact verification
-     Claims are checked against live or fixture-backed sources.
+     Claims are checked against offline/fixture-backed sources today; live Tavily fallback is on the public-v1 roadmap.
   -> Safety scoring
      Contextual safety, truthfulness, urgency, and tone mimicry are scored.
   -> Deterministic gate
