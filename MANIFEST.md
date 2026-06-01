@@ -7,6 +7,8 @@
 - `README.md` — Public pitch + architecture diagram + quickstart.
 - `ROADMAP.md` — Public-v1 maintainer backlog, current baseline, Codex/API-credit use plan, and non-goals.
 - `DEMO.md` — Local demo runbook, click path, API/MCP checks, and Alpic handoff.
+- `CODE_OF_CONDUCT.md` — Contributor conduct expectations and escalation path for unsafe or abusive behavior.
+- `SUPPORT.md` — Best-effort support scope, routing, and maintainer priorities.
 - `.github/workflows/ci.yml` — GitHub Actions gate for backend tests, seed eval report, frontend audit, lint, and build on push/PR/manual runs.
 - `.github/workflows/codeql.yml` — GitHub CodeQL scanning for Python and JavaScript/TypeScript on push/PR/weekly/manual runs.
 - `.github/dependabot.yml` — Weekly dependency and GitHub Actions update checks for backend, frontend, and workflow actions.
@@ -48,6 +50,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Added `CODE_OF_CONDUCT.md`, `SUPPORT.md`, and a general issue template to improve public maintainer readiness and contributor routing.
 - 2026-06-01: Truth-synced README and frontend copy so Tavily is described as a public-v1 live-verification roadmap item, current claim checks are offline/fixture-backed, Overmind is optional export, and local audit traces remain the source of truth.
 - 2026-06-01: Synced README public verification copy to the current 95-test suite, added release badge, and documented active maintenance gates: CI, CodeQL, Dependabot security updates, secret scanning, push protection, and frontend audit.
 - 2026-06-01: Expanded CI to cover frontend `npm audit`, lint, and build; added CodeQL scanning for Python and JavaScript/TypeScript; added Dependabot schedules for pip, npm, and GitHub Actions.

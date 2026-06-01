@@ -12,7 +12,7 @@ It answers one question before an ad is shown:
 
 > Is this ad safe for this conversation, and are its claims true?
 
-For ad networks, AI assistants, and sponsors, Sentinel turns ad placement into a replayable decision instead of a black box. It checks the user's conversational context, verifies the ad's factual claims, applies deterministic policy rules, and returns a signed receipt that explains exactly why the ad was approved, blocked, or escalated.
+For ad networks, AI assistants, and sponsors, Sentinel turns ad placement into a replayable decision instead of a black box. It evaluates the user's conversational context and ad claims against the current verifier, applies deterministic policy rules, and returns a signed receipt that explains exactly why the ad was approved, blocked, or escalated.
 
 Built for the [Cursor x Thrad London Hackathon](https://cursor-thrads-london-2026.vercel.app/), May 2026.
 
@@ -190,6 +190,7 @@ Current maintenance gates:
 - `docs/assets/` contains current demo video and screenshots.
 - `DEMO.md` has the presenter runbook and hosted deployment handoff.
 - `ROADMAP.md` tracks the public-v1 maintainer backlog and Codex/API-credit use plan.
+- `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `SUPPORT.md` set contribution, reporting, and maintainer expectations.
 - `.github/` contains CI, CodeQL, Dependabot, issue templates, and the PR checklist.
 
 ## Design Principle
