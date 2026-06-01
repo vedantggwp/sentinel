@@ -167,7 +167,7 @@ The core gate and demo behavior are covered by deterministic tests:
 Current full test suite:
 
 ```text
-115 passed
+125 passed
 ```
 
 The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.
@@ -185,7 +185,7 @@ Known limits:
 
 - Live Tavily verification currently covers rating claims; unsupported claims, no-key runs, and provider failures use deterministic fixture fallback.
 - External services are never hard dependencies for CI. Thrad live-shaped bid fetch, Overmind span export, and hosted MCP deployment all have fixture, optional, or local fallbacks.
-- The adversarial held-out split is measurement-only and currently reports `3/10`; it is not used as a release gate until the policy work catches up.
+- The adversarial held-out split is measurement-only and currently reports `7/10`; it is not used as a release gate. See `docs/ADVERSARIAL_TRIAGE.md` for fixed urgency-evasion cases and remaining known limits.
 - The demo API defaults to permissive CORS for local/hackathon use. For production, set `SENTINEL_CORS_ORIGINS` to explicit comma-separated origins, for example `https://publisher.example,https://ops.example`.
 
 Release checks before tagging:

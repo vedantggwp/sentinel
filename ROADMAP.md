@@ -59,10 +59,14 @@ the next maintainer wave:
 - [#23](https://github.com/vedantggwp/sentinel/issues/23) broaden Tavily claim
   verification beyond rating claims while keeping no-network fallback tests.
 - [#24](https://github.com/vedantggwp/sentinel/issues/24) remediate known
-  adversarial held-out eval gaps without hiding the current measurement-only
-  score.
+  adversarial held-out eval gaps without hiding remaining measurement-only
+  failures. Status: urgency-evasion class improved; held-out score is now
+  `7/10`; remaining context/minor-detection limits are documented in
+  `docs/ADVERSARIAL_TRIAGE.md`.
 - [#25](https://github.com/vedantggwp/sentinel/issues/25) harden hosted MCP
   smoke and deployment controls without making hosted services a CI dependency.
+  Status: implemented with manual hosted smoke workflow, redacted smoke output,
+  and configurable production CORS origins.
 
 ## Where Codex and API Credits Help
 
