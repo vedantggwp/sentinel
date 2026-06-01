@@ -1,5 +1,9 @@
 # Sentinel
 
+[![CI](https://github.com/vedantggwp/sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/vedantggwp/sentinel/actions/workflows/ci.yml)
+[![Security policy](https://img.shields.io/badge/security-policy-blue)](https://github.com/vedantggwp/sentinel/security/policy)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Sentinel is a safety and verification layer for sponsored recommendations inside AI conversations.
 
 It answers one question before an ad is shown:
@@ -174,6 +178,7 @@ The full seed regression lives in `data/overmind_seed_cases.json` and is exercis
 - `ui/` contains the older vanilla HTML/JS FastAPI demo.
 - `docs/assets/` contains current demo video and screenshots.
 - `DEMO.md` has the presenter runbook and hosted deployment handoff.
+- `ROADMAP.md` tracks the public-v1 maintainer backlog and Codex/API-credit use plan.
 
 ## Design Principle
 
