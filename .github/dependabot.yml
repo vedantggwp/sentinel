@@ -29,6 +29,11 @@ updates:
       day: monday
       time: "08:30"
     open-pull-requests-limit: 3
+    groups:
+      react-runtime:
+        patterns:
+          - react
+          - react-dom
     labels:
       - dependencies
       - codex-oss
