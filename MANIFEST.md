@@ -54,6 +54,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Opened and documented the next Codex/API-credit hardening backlog (#23 claim-type expansion, #24 adversarial eval remediation, #25 hosted MCP controls).
 - 2026-06-01: Implemented issue #13 Tavily rating-claim verification behind `TAVILY_API_KEY`, with mocked match/mismatch tests, no-key/failure fixture fallback tests, source hashes on claims, and deterministic-gate coverage.
 - 2026-06-01: Added README known limits and release checks for issue #16, including hosted MCP smoke guidance for deployed `/mcp` URLs.
 - 2026-06-01: Hardened Thrad live-shaped bid normalization for issue #15 with OpenRTB-style payload support and timeout/500/malformed fallback tests.

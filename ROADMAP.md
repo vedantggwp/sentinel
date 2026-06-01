@@ -32,21 +32,37 @@ the public claims tied to maintainable code rather than adoption theater.
 
 2. **Optional trace export**
    - Issue: [#14](https://github.com/vedantggwp/sentinel/issues/14)
+   - Status: implemented with local-audit authority and failure-safe tests.
    - Emit Overmind spans when configured.
    - Keep local audit JSONL authoritative.
    - Prove tracing failures do not affect API/MCP verdicts.
 
 3. **Ad bid normalization**
    - Issue: [#15](https://github.com/vedantggwp/sentinel/issues/15)
+   - Status: implemented with live-shaped payload and fallback tests.
    - Normalize Thrad-style bid payloads into Sentinel request contracts.
    - Test live-shaped success, timeout, server error, and malformed payload
      fallback paths.
 
 4. **API, MCP, and receipt hardening**
    - Issue: [#16](https://github.com/vedantggwp/sentinel/issues/16)
+   - Status: implemented with public contract and release-check coverage.
    - Stabilize public response envelopes.
    - Expand signing, verification, and tamper-detection tests.
    - Document hosted MCP smoke checks once a public endpoint is active.
+
+## Active Hardening Backlog
+
+The initial public-v1 lane is implemented, with follow-up issues kept open for
+the next maintainer wave:
+
+- [#23](https://github.com/vedantggwp/sentinel/issues/23) broaden Tavily claim
+  verification beyond rating claims while keeping no-network fallback tests.
+- [#24](https://github.com/vedantggwp/sentinel/issues/24) remediate known
+  adversarial held-out eval gaps without hiding the current measurement-only
+  score.
+- [#25](https://github.com/vedantggwp/sentinel/issues/25) harden hosted MCP
+  smoke and deployment controls without making hosted services a CI dependency.
 
 ## Where Codex and API Credits Help
 
