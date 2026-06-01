@@ -47,9 +47,11 @@
 - `data/policy.json` — Ineligible contexts, score dimensions, block/escalate thresholds.
 - `data/scenarios.json` — 4 seed scenarios = the acceptance test for the demo.
 - `tests/test_smoke.py` — Health, API scenario, attestation, and MCP wrapper smoke tests.
+- `tests/test_public_api_contract.py` — Public API/MCP contract tests for route envelopes, bounded audit queries, escalation decisions, and signed receipt verification.
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Hardened `/v1/audit/latest` with bounded `limit` validation and added public API/MCP contract tests for issue #16.
 - 2026-06-01: Added `CODE_OF_CONDUCT.md`, `SUPPORT.md`, and a general issue template to improve public maintainer readiness and contributor routing.
 - 2026-06-01: Truth-synced README and frontend copy so Tavily is described as a public-v1 live-verification roadmap item, current claim checks are offline/fixture-backed, Overmind is optional export, and local audit traces remain the source of truth.
 - 2026-06-01: Synced README public verification copy to the current 95-test suite, added release badge, and documented active maintenance gates: CI, CodeQL, Dependabot security updates, secret scanning, push protection, and frontend audit.

@@ -7,7 +7,7 @@ context_gate -> claim_extractor -> fact_verifier -> safety_judge
 import json
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -66,7 +66,7 @@ def policy() -> dict:
 
 
 @app.get("/v1/audit/latest")
-def audit_latest(limit: int = 20) -> dict:
+def audit_latest(limit: int = Query(20, ge=1, le=100)) -> dict:
     return {"success": True, "data": {"records": latest_decisions(limit)}, "error": None}
 
 
