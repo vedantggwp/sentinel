@@ -7,7 +7,9 @@
 - `README.md` — Public pitch + architecture diagram + quickstart.
 - `ROADMAP.md` — Public-v1 maintainer backlog, current baseline, Codex/API-credit use plan, and non-goals.
 - `DEMO.md` — Local demo runbook, click path, API/MCP checks, and Alpic handoff.
-- `.github/workflows/ci.yml` — GitHub Actions gate for backend tests and the seed eval report on push/PR/manual runs.
+- `.github/workflows/ci.yml` — GitHub Actions gate for backend tests, seed eval report, frontend audit, lint, and build on push/PR/manual runs.
+- `.github/workflows/codeql.yml` — GitHub CodeQL scanning for Python and JavaScript/TypeScript on push/PR/weekly/manual runs.
+- `.github/dependabot.yml` — Weekly dependency and GitHub Actions update checks for backend, frontend, and workflow actions.
 - `.github/ISSUE_TEMPLATE/` — Bug report and public-v1 task templates that require reproduction, tests, acceptance evidence, and public-truth impact.
 - `.github/pull_request_template.md` — PR review checklist for public claims, deterministic-gate safety, verification commands, and integration truth.
 - `docs/PUBLIC_V1_TDD_FLYWHEEL.md` — Public-v1 execution loop: TDD lanes, tracking rules, sub-agent packets, release checks, and maintenance cadence.
@@ -46,6 +48,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Expanded CI to cover frontend `npm audit`, lint, and build; added CodeQL scanning for Python and JavaScript/TypeScript; added Dependabot schedules for pip, npm, and GitHub Actions.
 - 2026-06-01: Added GitHub issue templates and a PR template so future external contributions capture reproduction steps, test evidence, public-claim impact, and deterministic-gate safety before review.
 - 2026-06-01: Added GitHub Actions CI for backend tests plus the seed eval report, and added `ROADMAP.md` to make the public-v1 maintainer backlog and Codex/API-credit use plan reviewer-visible.
 - 2026-05-30: Added `docs/CODEX_APP_PUBLIC_V1_OPERATING_MODEL.md` — the Codex-app execution model for public-v1 work, covering orchestrator vs worker agents, plugin boundaries, recurring automation prompts, parallel waves, and production governance.

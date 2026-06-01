@@ -114,7 +114,7 @@ export function mapAnalyzeToEvaluation(
   candidateAd: CandidateAd,
   latencyMs: number,
 ): EvaluationResult {
-  const { result, trace, attestation } = data;
+  const { result, trace } = data;
   const excerpt =
     result.vulnerability_flags.length > 0
       ? result.reason.slice(0, 120)

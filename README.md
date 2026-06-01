@@ -1,6 +1,7 @@
 # Sentinel
 
 [![CI](https://github.com/vedantggwp/sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/vedantggwp/sentinel/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/vedantggwp/sentinel/actions/workflows/codeql.yml/badge.svg)](https://github.com/vedantggwp/sentinel/actions/workflows/codeql.yml)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](https://github.com/vedantggwp/sentinel/security/policy)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -179,6 +180,7 @@ The full seed regression lives in `data/overmind_seed_cases.json` and is exercis
 - `docs/assets/` contains current demo video and screenshots.
 - `DEMO.md` has the presenter runbook and hosted deployment handoff.
 - `ROADMAP.md` tracks the public-v1 maintainer backlog and Codex/API-credit use plan.
+- `.github/` contains CI, CodeQL, Dependabot, issue templates, and the PR checklist.
 
 ## Design Principle
 
