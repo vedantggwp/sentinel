@@ -160,13 +160,13 @@ For hosted deployment, use the Alpic button above or import this repository into
 The core gate and demo behavior are covered by deterministic tests:
 
 ```bash
-.venv/bin/python -m pytest tests/test_eval.py tests/test_gate.py tests/test_smoke.py tests/test_public_api_contract.py -q
+.venv/bin/python -m pytest tests/test_eval.py tests/test_gate.py tests/test_smoke.py tests/test_public_api_contract.py tests/test_tracing.py -q
 ```
 
 Current full test suite:
 
 ```text
-102 passed
+105 passed
 ```
 
 The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.
