@@ -178,6 +178,33 @@ Current maintenance gates:
 - Dependabot security updates, secret scanning, and push protection are enabled.
 - Frontend `npm audit --audit-level=moderate` currently reports `0 vulnerabilities`.
 
+## Known Limits and Release Checks
+
+Known limits:
+
+- Claim verification is deterministic offline/fixture logic today; live Tavily verification is tracked in [#13](https://github.com/vedantggwp/sentinel/issues/13).
+- External services are never hard dependencies for CI. Thrad live-shaped bid fetch, Overmind span export, and hosted MCP deployment all have fixture, optional, or local fallbacks.
+- The adversarial held-out split is measurement-only and currently reports `3/10`; it is not used as a release gate until the policy work catches up.
+- The demo API keeps permissive CORS for local/hackathon use; tighten origins before any production deployment.
+
+Release checks before tagging:
+
+```bash
+.venv/bin/python -m pytest -q
+.venv/bin/python -m sentinel.eval
+cd frontend
+npm audit --audit-level=moderate
+npm run lint
+npm run build
+```
+
+For hosted MCP releases, run the same smoke script against the deployed `/mcp` URL:
+
+```bash
+MCP_URL=https://your-deployment.example/mcp \
+  uv run --python 3.12 --with-requirements requirements.txt python scripts/smoke_mcp_http.py
+```
+
 ## Project Shape
 
 - `sentinel/pipeline/` contains the four-stage safety pipeline and deterministic gate.

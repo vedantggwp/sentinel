@@ -53,6 +53,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Added README known limits and release checks for issue #16, including hosted MCP smoke guidance for deployed `/mcp` URLs.
 - 2026-06-01: Hardened Thrad live-shaped bid normalization for issue #15 with OpenRTB-style payload support and timeout/500/malformed fallback tests.
 - 2026-06-01: Added trace tests for issue #14: local audit persistence without Overmind, mocked Overmind span attributes when configured, and API success when Overmind raises.
 - 2026-06-01: Hardened `/v1/audit/latest` with bounded `limit` validation and added public API/MCP contract tests for issue #16.
