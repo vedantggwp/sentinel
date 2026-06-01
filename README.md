@@ -155,10 +155,10 @@ The core gate and demo behavior are covered by deterministic tests:
 .venv/bin/python -m pytest tests/test_eval.py tests/test_gate.py tests/test_smoke.py -q
 ```
 
-Current focused sanity check:
+Current full test suite:
 
 ```text
-47 passed
+92 passed
 ```
 
 The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.

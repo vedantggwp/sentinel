@@ -6,6 +6,8 @@
 - `CLAUDE.md` — Claude-specific notes; imports AGENTS.md.
 - `README.md` — Public pitch + architecture diagram + quickstart.
 - `DEMO.md` — Local demo runbook, click path, API/MCP checks, and Alpic handoff.
+- `docs/PUBLIC_V1_TDD_FLYWHEEL.md` — Public-v1 execution loop: TDD lanes, tracking rules, sub-agent packets, release checks, and maintenance cadence.
+- `docs/CODEX_APP_PUBLIC_V1_OPERATING_MODEL.md` — How to run Sentinel public-v1 through Codex app: orchestrator/worker/explorer roles, automations, plugins, waves, and governance.
 - `scripts/smoke_mcp_http.py` — Streamable HTTP MCP smoke script for local and deployed `/mcp` endpoints.
 - `sentinel/contracts.py` — Frozen interface: `AdRequest`, `Claim`, `PipelineResult`, `Attestation`, `Verdict`. Import; don't edit without a sync.
 - `sentinel/config.py` — Env-backed settings (pydantic-settings). All secrets via `.env`.
@@ -40,6 +42,8 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-05-30: Added `docs/CODEX_APP_PUBLIC_V1_OPERATING_MODEL.md` — the Codex-app execution model for public-v1 work, covering orchestrator vs worker agents, plugin boundaries, recurring automation prompts, parallel waves, and production governance.
+- 2026-05-30: Added `docs/PUBLIC_V1_TDD_FLYWHEEL.md` — an executable public-v1 plan covering ground-truth integration states, red/green/refactor lane gates, what to track vs ignore, sub-agent packets for Tavily/Overmind/Thrad/LLM/public docs, release checks, and maintenance rhythm.
 - 2026-05-28: Added 4 README demo GIFs (`docs/assets/gifs/`) + retina source captures (`docs/assets/layne-ui/v2/`). GIFs are eased pan/zoom camera moves over real `/demo` post-verdict states (console tour, deterministic pipeline span tree, BLOCK+signed receipt, APPROVE+signed receipt); embedded in a new README "See it run" section. Full motion-graphics launch video deferred per Ved.
 - 2026-05-28: Built Phase 5 L4 judge calibration harness (`calibrate.py`, `data/safety_gold.jsonl`) — per-dimension quadratic-weighted Cohen's kappa vs human gold (target >=0.6) + length-bias probe over a swappable JudgeFn seam (defaults to the live pipeline's L4 scores). Seed gold: overall kappa 0.85, honestly flags annotator floor not met. Added kappa+Pearson to `eval_stats.py`. Not yet a CI gate (no LLM judge wired; gold is a seed).
 - 2026-05-28: Upgraded evals to May-2026 standard — added Wilson CI + confusion matrix + per-verdict P/R/F1 + safety-first cost matrix (`eval_stats.py`, `eval_metrics.py`); split-aware runner; held-out adversarial split (fitted 100% vs held-out 30%); gate-jitter robustness tests. Zero new deps. Sources in `PLAN.md` / memory.
