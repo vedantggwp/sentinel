@@ -147,13 +147,14 @@ uv run --python 3.12 --with-requirements requirements.txt python scripts/smoke_m
 Expected smoke output:
 
 ```text
+endpoint=http://127.0.0.1:8765/mcp
 tools=verify
 verdict=BLOCK
 rule_fired=false_claim
 signed=true
 ```
 
-For hosted deployment, use the Alpic button above or import this repository into Alpic and expose the MCP server at `/mcp`.
+For hosted deployment, use the Alpic button above or import this repository into Alpic and expose the MCP server at `/mcp`. The smoke script redacts auth, query strings, and fragments from the endpoint label before printing logs.
 
 ## Current Verification
 
@@ -185,7 +186,7 @@ Known limits:
 - Live Tavily verification currently covers rating claims; unsupported claims, no-key runs, and provider failures use deterministic fixture fallback.
 - External services are never hard dependencies for CI. Thrad live-shaped bid fetch, Overmind span export, and hosted MCP deployment all have fixture, optional, or local fallbacks.
 - The adversarial held-out split is measurement-only and currently reports `3/10`; it is not used as a release gate until the policy work catches up.
-- The demo API keeps permissive CORS for local/hackathon use; tighten origins before any production deployment.
+- The demo API defaults to permissive CORS for local/hackathon use. For production, set `SENTINEL_CORS_ORIGINS` to explicit comma-separated origins, for example `https://publisher.example,https://ops.example`.
 
 Release checks before tagging:
 
@@ -204,6 +205,8 @@ For hosted MCP releases, run the same smoke script against the deployed `/mcp` U
 MCP_URL=https://your-deployment.example/mcp \
   uv run --python 3.12 --with-requirements requirements.txt python scripts/smoke_mcp_http.py
 ```
+
+Or run the manual **Hosted MCP Smoke** GitHub Actions workflow after adding the deployed `/mcp` endpoint as the `MCP_URL` repository secret. This workflow is manual-only so ordinary CI never depends on a hosted deployment or live network state.
 
 ## Project Shape
 

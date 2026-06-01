@@ -5,6 +5,7 @@ context_gate -> claim_extractor -> fact_verifier -> safety_judge
 -> deterministic gate -> signed attestation -> local audit trace.
 """
 import json
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, Query
@@ -26,12 +27,19 @@ class EscalationDecision(BaseModel):
     reviewer: str = "demo"
 
 
+def cors_origins_from_env() -> list[str]:
+    raw = os.environ.get("SENTINEL_CORS_ORIGINS", "*").strip()
+    origins = [origin.strip() for origin in raw.split(",") if origin.strip()]
+    return origins or ["*"]
+
+
 app = FastAPI(title="Sentinel", version="0.1.0")
 
-# Hackathon demo only — tighten before any real deployment.
+# Default wildcard CORS is for local demo/hackathon use. Set
+# SENTINEL_CORS_ORIGINS to comma-separated production origins before deploying.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins_from_env(),
     allow_methods=["*"],
     allow_headers=["*"],
 )
