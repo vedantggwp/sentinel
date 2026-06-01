@@ -19,3 +19,14 @@ def test_limited_availability_requires_only_as_a_word():
     claims = extract_claims("This lonely 2 policies left phrase is not scarcity.")
 
     assert claims == []
+
+
+def test_statistic_claims_are_extracted():
+    claims = extract_claims(
+        "MarketPulse is trusted by 10,000 customers with 98% satisfaction."
+    )
+
+    assert ("10,000 customers", "statistic") in [
+        (claim.text, claim.type) for claim in claims
+    ]
+    assert ("98%", "statistic") in [(claim.text, claim.type) for claim in claims]

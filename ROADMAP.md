@@ -14,7 +14,9 @@ the public claims tied to maintainable code rather than adoption theater.
   policy code.
 - Rating claims can use live Tavily evidence when `TAVILY_API_KEY` is
   configured, with deterministic fixture fallback for CI, no-key runs, and
-  provider failures.
+  provider failures. Price, availability, endorsement, and statistic claims
+  have explicit fixture-backed or non-verifiable fallback outcomes with source
+  hashes.
 - Receipts can be signed and verified when a local ed25519 key is configured.
 - Seed eval regression is the maintainer gate; adversarial cases are reported
   as measurement and known-limit evidence.
@@ -25,7 +27,8 @@ the public claims tied to maintainable code rather than adoption theater.
 
 1. **Live claim verification with safe fallback**
    - Issue: [#13](https://github.com/vedantggwp/sentinel/issues/13)
-   - Status: implemented for rating claims; broaden claim-type coverage next.
+   - Status: implemented for live rating claims plus explicit fallback behavior
+     for price, availability, endorsement, and statistic claims.
    - Keep deterministic fixture fallback for CI and local development.
    - Preserve the rule that external evidence can inform the gate but cannot
      decide the final verdict.
@@ -58,6 +61,9 @@ the next maintainer wave:
 
 - [#23](https://github.com/vedantggwp/sentinel/issues/23) broaden Tavily claim
   verification beyond rating claims while keeping no-network fallback tests.
+  Status: implemented as scoped fallback behavior for price, availability,
+  endorsement, and statistic claims; only rating claims are live-backed by
+  Tavily in this release.
 - [#24](https://github.com/vedantggwp/sentinel/issues/24) remediate known
   adversarial held-out eval gaps without hiding remaining measurement-only
   failures. Status: urgency-evasion class improved; held-out score is now

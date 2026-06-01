@@ -141,6 +141,95 @@ def test_tavily_false_rating_still_blocks_through_deterministic_gate(monkeypatch
     assert result.claims[0].verified is False
 
 
+def test_price_claim_has_explicit_non_verifiable_fallback(monkeypatch):
+    _mock_tavily(monkeypatch, {"results": []})
+    ad = AdRequest(
+        ad_id="price",
+        conversation="User: compare desk chairs.",
+        ad_creative="ChairCo ergonomic chair - $199.",
+        advertiser="ChairCo",
+    )
+
+    price = _claim_of_type(verify_claims(ad, extract_claims(ad.ad_creative)), "price")
+
+    assert FakeTavilyClient.calls == []
+    assert price.verified is None
+    assert price.actual_value == "not checked in offline mode"
+    assert price.source_url == "offline://not-checked/price"
+    assert price.source_hash == hashlib.sha256(
+        b"offline://not-checked/price"
+    ).hexdigest()
+
+
+def test_availability_claim_has_explicit_non_verifiable_fallback(monkeypatch):
+    _mock_tavily(monkeypatch, {"results": []})
+    ad = AdRequest(
+        ad_id="availability",
+        conversation="User: compare delivery options.",
+        ad_creative="ShipFast - free next-day delivery.",
+        advertiser="ShipFast",
+    )
+
+    availability = _claim_of_type(
+        verify_claims(ad, extract_claims(ad.ad_creative)),
+        "availability",
+    )
+
+    assert FakeTavilyClient.calls == []
+    assert availability.verified is None
+    assert availability.actual_value == "not checked in offline mode"
+    assert availability.source_url == "offline://not-checked/availability"
+    assert availability.source_hash == hashlib.sha256(
+        b"offline://not-checked/availability"
+    ).hexdigest()
+
+
+def test_endorsement_claim_uses_fixture_backed_false_fallback(monkeypatch):
+    _mock_tavily(monkeypatch, {"results": []})
+    ad = AdRequest(
+        ad_id="endorsement",
+        conversation="User: compare blenders.",
+        ad_creative="BlendMax - #1 rated by experts.",
+        advertiser="BlendMax",
+    )
+
+    endorsement = _claim_of_type(
+        verify_claims(ad, extract_claims(ad.ad_creative)),
+        "endorsement",
+    )
+
+    assert FakeTavilyClient.calls == []
+    assert endorsement.verified is False
+    assert endorsement.actual_value == "no evidence of a #1 ranking"
+    assert endorsement.source_url == "offline://claim/unsubstantiated-superlative"
+    assert endorsement.source_hash == hashlib.sha256(
+        b"offline://claim/unsubstantiated-superlative"
+    ).hexdigest()
+
+
+def test_statistic_claim_has_explicit_non_verifiable_fallback(monkeypatch):
+    _mock_tavily(monkeypatch, {"results": []})
+    ad = AdRequest(
+        ad_id="statistic",
+        conversation="User: compare CRM tools.",
+        ad_creative="SalesNest is trusted by 10,000 customers.",
+        advertiser="SalesNest",
+    )
+
+    statistic = _claim_of_type(
+        verify_claims(ad, extract_claims(ad.ad_creative)),
+        "statistic",
+    )
+
+    assert FakeTavilyClient.calls == []
+    assert statistic.verified is None
+    assert statistic.actual_value == "not checked in offline mode"
+    assert statistic.source_url == "offline://not-checked/statistic"
+    assert statistic.source_hash == hashlib.sha256(
+        b"offline://not-checked/statistic"
+    ).hexdigest()
+
+
 def _mock_tavily(monkeypatch, response: dict, error: Exception | None = None) -> None:
     FakeTavilyClient.calls = []
     FakeTavilyClient.response = response
@@ -160,3 +249,7 @@ def _rating_ad() -> AdRequest:
 
 def _rating_claim(claims):
     return next(claim for claim in claims if claim.type == "rating")
+
+
+def _claim_of_type(claims, claim_type: str):
+    return next(claim for claim in claims if claim.type == claim_type)

@@ -84,7 +84,7 @@ The sponsor products are part of the actual system path, not logos on a slide:
 
 MCP is the delivery surface, not a sponsor: Sentinel exposes `verify` as a callable tool so an agent, publisher app, or hosted Alpic deployment can check an ad before serving it.
 
-Current integration truth: the backend can use live Tavily evidence for rating claims when `TAVILY_API_KEY` is configured, and falls back to deterministic fixtures when no key is present or Tavily fails. Optional Overmind span emission is tested and closed in [#14](https://github.com/vedantggwp/sentinel/issues/14); Thrad bid normalization with deterministic fixture fallback is tested and closed in [#15](https://github.com/vedantggwp/sentinel/issues/15).
+Current integration truth: the backend can use live Tavily evidence for rating claims when `TAVILY_API_KEY` is configured, and falls back to deterministic fixtures when no key is present or Tavily fails. Price, availability, endorsement, and statistic claims have explicit fixture-backed or non-verifiable offline outcomes with source hashes; they are not live-backed yet. Optional Overmind span emission is tested and closed in [#14](https://github.com/vedantggwp/sentinel/issues/14); Thrad bid normalization with deterministic fixture fallback is tested and closed in [#15](https://github.com/vedantggwp/sentinel/issues/15).
 
 ## How It Works
 
@@ -95,7 +95,7 @@ Ad request
   -> Claim extraction
      Verifiable claims are pulled from the ad creative.
   -> Fact verification
-     Rating claims are checked with live Tavily when configured; CI, local demos, no-key runs, and provider failures use deterministic fixture fallback.
+     Rating claims are checked with live Tavily when configured; price, availability, endorsement, and statistic claims use explicit fixture-backed or non-verifiable fallback outcomes.
   -> Safety scoring
      Contextual safety, truthfulness, urgency, and tone mimicry are scored.
   -> Deterministic gate
@@ -167,7 +167,7 @@ The core gate and demo behavior are covered by deterministic tests:
 Current full test suite:
 
 ```text
-125 passed
+130 passed
 ```
 
 The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.
@@ -183,7 +183,7 @@ Current maintenance gates:
 
 Known limits:
 
-- Live Tavily verification currently covers rating claims; unsupported claims, no-key runs, and provider failures use deterministic fixture fallback.
+- Live Tavily verification currently covers rating claims. Price, availability, endorsement, and statistic claims have explicit fixture-backed or non-verifiable fallback outcomes with source hashes; they are not live-backed yet.
 - External services are never hard dependencies for CI. Thrad live-shaped bid fetch, Overmind span export, and hosted MCP deployment all have fixture, optional, or local fallbacks.
 - The adversarial held-out split is measurement-only and currently reports `7/10`; it is not used as a release gate. See `docs/ADVERSARIAL_TRIAGE.md` for fixed urgency-evasion cases and remaining known limits.
 - The demo API defaults to permissive CORS for local/hackathon use. For production, set `SENTINEL_CORS_ORIGINS` to explicit comma-separated origins, for example `https://publisher.example,https://ops.example`.

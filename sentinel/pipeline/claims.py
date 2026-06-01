@@ -16,6 +16,10 @@ except ImportError:  # pragma: no cover - requirements.txt includes tavily-pytho
 
 PRICE_RE = re.compile(r"(\$|£)\s?\d[\d,]*(?:\.\d{2})?")
 RATING_RE = re.compile(r"\b\d(?:\.\d)?\s*(?:stars?|/5)\b", re.IGNORECASE)
+STATISTIC_RE = re.compile(
+    r"(?<!\w)\d{1,3}%(?!\w)|\b\d[\d,]*\s+(?:customers|users|people|downloads)\b",
+    re.IGNORECASE,
+)
 SCARCITY_TERMS = {"left", "remaining"}
 SCARCITY_WINDOW_CHARS = 120
 MAX_RATING_DELTA = 0.5
@@ -37,6 +41,9 @@ def extract_claims(ad_creative: str) -> list[Claim]:
 
     if "#1" in ad_creative or "number one" in ad_creative.lower():
         claims.append(Claim(text="#1 rated", type="endorsement"))
+
+    for match in STATISTIC_RE.finditer(ad_creative):
+        claims.append(Claim(text=match.group(0), type="statistic"))
 
     for text in _extract_limited_claim_texts(ad_creative):
         claims.append(Claim(text=text, type="availability"))
@@ -210,12 +217,12 @@ def _verify_claim_offline(advertiser: str, creative: str, claim: Claim) -> Claim
             source_url="offline://scenario/unverified-scarcity",
         )
 
-    if "$" in creative or "£" in creative:
+    if claim.type in {"price", "availability", "statistic"}:
         return _with_source(
             claim,
             verified=None,
             actual_value="not checked in offline mode",
-            source_url="offline://not-checked",
+            source_url=f"offline://not-checked/{claim.type}",
         )
 
     return claim
