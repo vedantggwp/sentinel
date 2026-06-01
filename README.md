@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/vedantggwp/sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/vedantggwp/sentinel/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/vedantggwp/sentinel/actions/workflows/codeql.yml/badge.svg)](https://github.com/vedantggwp/sentinel/actions/workflows/codeql.yml)
+[![Release](https://img.shields.io/github/v/release/vedantggwp/sentinel)](https://github.com/vedantggwp/sentinel/releases)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](https://github.com/vedantggwp/sentinel/security/policy)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -163,10 +164,17 @@ The core gate and demo behavior are covered by deterministic tests:
 Current full test suite:
 
 ```text
-92 passed
+95 passed
 ```
 
 The full seed regression lives in `data/overmind_seed_cases.json` and is exercised by `tests/test_eval.py`.
+
+Current maintenance gates:
+
+- GitHub Actions runs backend tests, the seed eval report, frontend audit, frontend lint, and frontend build.
+- CodeQL scans Python and JavaScript/TypeScript.
+- Dependabot security updates, secret scanning, and push protection are enabled.
+- Frontend `npm audit --audit-level=moderate` currently reports `0 vulnerabilities`.
 
 ## Project Shape
 

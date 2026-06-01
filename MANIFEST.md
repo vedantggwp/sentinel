@@ -48,6 +48,7 @@
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Synced README public verification copy to the current 95-test suite, added release badge, and documented active maintenance gates: CI, CodeQL, Dependabot security updates, secret scanning, push protection, and frontend audit.
 - 2026-06-01: Expanded CI to cover frontend `npm audit`, lint, and build; added CodeQL scanning for Python and JavaScript/TypeScript; added Dependabot schedules for pip, npm, and GitHub Actions.
 - 2026-06-01: Added GitHub issue templates and a PR template so future external contributions capture reproduction steps, test evidence, public-claim impact, and deterministic-gate safety before review.
 - 2026-06-01: Added GitHub Actions CI for backend tests plus the seed eval report, and added `ROADMAP.md` to make the public-v1 maintainer backlog and Codex/API-credit use plan reviewer-visible.
