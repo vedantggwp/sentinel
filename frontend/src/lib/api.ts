@@ -32,6 +32,7 @@ export type ApiClaim = {
   verified: boolean | null;
   actual_value?: string | null;
   source_url?: string | null;
+  source_hash?: string | null;
 };
 
 export type ApiPipelineResult = {

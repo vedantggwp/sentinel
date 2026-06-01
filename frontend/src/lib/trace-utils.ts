@@ -22,7 +22,7 @@ export function spanOperation(id: TraceStepId): string {
     thrad: "thrad.bid_request",
     vulnerability: "sentinel.vulnerability_check",
     policy: "sentinel.policy_eval",
-    factcheck: "claim.verify.offline",
+    factcheck: "claim.verify.live_or_fixture",
     decision: "sentinel.deterministic_gate",
     overmind: "sentinel.trace_persist",
   };

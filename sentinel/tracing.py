@@ -56,7 +56,7 @@ def _audit_record(
                 "verified": claim.verified,
                 "actual_value": claim.actual_value,
                 "source_url": claim.source_url,
-                "source_hash": _hash_text(claim.source_url or ""),
+                "source_hash": claim.source_hash or _hash_text(claim.source_url or ""),
             }
             for claim in result.claims
         ],

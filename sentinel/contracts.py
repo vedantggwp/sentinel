@@ -32,6 +32,7 @@ class Claim(BaseModel):
     verified: bool | None = None
     actual_value: str | None = None
     source_url: str | None = None
+    source_hash: str | None = None
 
 
 class PipelineResult(BaseModel):

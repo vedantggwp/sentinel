@@ -5,7 +5,7 @@ import { LandingNav } from "@/components/landing/LandingNav";
 import { ModelLogoCloud } from "@/components/landing/ModelLogoCloud";
 
 const CHANGELOG = [
-  { title: "Fixture claim check", when: "today" },
+  { title: "Tavily claim fallback", when: "today" },
   { title: "Deterministic gate v2", when: "2d ago" },
   { title: "Optional trace export", when: "5d ago" },
   { title: "Thrad bid adapter", when: "1w ago" },
@@ -19,11 +19,11 @@ const TOC = [
   { id: "cta", label: "Get started" },
 ];
 
-const INTEGRATIONS = ["Thrad", "Tavily roadmap", "Overmind optional", "FastAPI", "MCP"];
+const INTEGRATIONS = ["Thrad", "Tavily live/fallback", "Overmind optional", "FastAPI", "MCP"];
 
 const PRIMITIVES = [
   { code: "CTX", title: "Context gate", desc: "Vulnerability signals before any ad is considered." },
-  { code: "EVD", title: "Claim verify", desc: "Offline fixture-backed evidence today; live Tavily is on the public-v1 roadmap." },
+  { code: "EVD", title: "Claim verify", desc: "Live Tavily for rating claims when configured; fixture fallback otherwise." },
   { code: "GTE", title: "Deterministic gate", desc: "LLMs score. Code decides. Always auditable." },
   { code: "LOG", title: "Audit trace", desc: "Every verdict is persisted locally; Overmind export is optional when configured." },
 ];
@@ -55,7 +55,7 @@ function TracePreviewCard() {
           <span>18ms</span>
         </li>
         <li className="flex justify-between text-[var(--muted)]">
-          <span>claim.verify.offline</span>
+          <span>claim.verify.live_or_fixture</span>
           <span className="text-[var(--highlight)]">890ms</span>
         </li>
         <li className="flex justify-between text-[var(--approve)]">
@@ -137,7 +137,7 @@ export function LandingPage() {
 
               <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-[var(--muted)]">
                 Debug unsafe ads in minutes. Evaluate Thrad-style candidates,
-                check claims against fixture-backed evidence, and ship a signed
+                check rating claims against Tavily or fixture-backed evidence, and ship a signed
                 receipt before anything reaches the user. Any model,
                 deterministic gate.
               </p>
@@ -172,7 +172,7 @@ export function LandingPage() {
                 One connected workflow
               </h2>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-[var(--muted)]">
-                Context gate, claim extraction, fixture-backed verification,
+                Context gate, claim extraction, Tavily-or-fixture verification,
                 safety judge, deterministic gate, signed attestation, local
                 audit trace with optional Overmind export.
               </p>

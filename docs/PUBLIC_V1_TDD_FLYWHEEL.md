@@ -34,8 +34,9 @@ Verified from the repo, not from the public pitch:
 - Thrad DistilBERT context classification is optional; heuristic context checks
   are always available.
 - Overmind is optional span emission; local audit JSONL is the source of truth.
-- Tavily is not in the backend verification path yet; claim verification is
-  currently offline heuristic/fixture logic.
+- Tavily can enter the backend verification path for rating claims when
+  `TAVILY_API_KEY` is configured; CI, no-key runs, unsupported claims, and
+  provider failures use deterministic fixture fallback.
 - OpenAI and Anthropic are dependency/config scaffolding only; no pipeline stage
   calls them today.
 
@@ -180,6 +181,10 @@ Acceptance:
 - No test requires real network.
 - Gate still blocks false claims through `false_claim`.
 - README says "live Tavily when configured; fixture fallback otherwise."
+
+Status 2026-06-01: implemented for rating claims in `sentinel/pipeline/claims.py`
+with mocked Tavily match/mismatch, failure fallback, no-key fallback,
+source-hash, and deterministic-gate tests in `tests/test_fact_verifier.py`.
 
 ### P0: Overmind Observable Optional Tracing
 

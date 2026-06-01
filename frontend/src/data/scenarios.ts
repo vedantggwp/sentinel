@@ -203,7 +203,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         ],
         vulnerability: { signals: [], severity: "low" },
         policySummary:
-          "Claim truthfulness score below threshold. Advertised 4.9★ conflicts with fixture-backed evidence.",
+          "Claim truthfulness score below threshold. Advertised 4.9★ conflicts with Tavily-or-fixture evidence.",
         claims: [
           {
             text: "4.9 stars on Amazon",

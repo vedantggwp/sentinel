@@ -12,6 +12,9 @@ the public claims tied to maintainable code rather than adoption theater.
   pipeline.
 - Final `APPROVE`, `BLOCK`, or `ESCALATE` verdict comes from deterministic
   policy code.
+- Rating claims can use live Tavily evidence when `TAVILY_API_KEY` is
+  configured, with deterministic fixture fallback for CI, no-key runs, and
+  provider failures.
 - Receipts can be signed and verified when a local ed25519 key is configured.
 - Seed eval regression is the maintainer gate; adversarial cases are reported
   as measurement and known-limit evidence.
@@ -22,7 +25,7 @@ the public claims tied to maintainable code rather than adoption theater.
 
 1. **Live claim verification with safe fallback**
    - Issue: [#13](https://github.com/vedantggwp/sentinel/issues/13)
-   - Add Tavily-backed factual claim checks when configured.
+   - Status: implemented for rating claims; broaden claim-type coverage next.
    - Keep deterministic fixture fallback for CI and local development.
    - Preserve the rule that external evidence can inform the gate but cannot
      decide the final verdict.

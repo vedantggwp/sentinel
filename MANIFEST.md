@@ -19,11 +19,11 @@
 - `scripts/smoke_mcp_http.py` — Streamable HTTP MCP smoke script for local and deployed `/mcp` endpoints.
 - `sentinel/contracts.py` — Frozen interface: `AdRequest`, `Claim`, `PipelineResult`, `Attestation`, `Verdict`. Import; don't edit without a sync.
 - `sentinel/config.py` — Env-backed settings (pydantic-settings). All secrets via `.env`.
-- `sentinel/main.py` — FastAPI app; `/health` + `/v1/analyze` wired to the offline deterministic pipeline.
+- `sentinel/main.py` — FastAPI app; `/health` + `/v1/analyze` wired to the deterministic pipeline.
 - `sentinel/mcp_server.py` — FastMCP `verify` tool over streamable HTTP; wraps the same deterministic pipeline.
 - `sentinel/tracing.py` — Local audit JSONL persistence plus optional Overmind span emission.
 - `sentinel/integrations/thrad_client.py` — Thrad staging adapter with live-shaped payload normalization and deterministic mock fallback.
-- `sentinel/pipeline/` — Thrad DistilBERT context classifier with heuristic fallback, claim extractor, fixture fact verifier, safety judge, and deterministic `decide_placement`.
+- `sentinel/pipeline/` — Thrad DistilBERT context classifier with heuristic fallback, claim extractor, Tavily-backed rating verifier with fixture fallback, safety judge, and deterministic `decide_placement`.
 - `sentinel/pipeline/thrad_context_classifier.py` — Lazy ONNX wrapper for `Thrad/thrad-distilbert-conversation-classifier`, pinned to a Hugging Face revision and mapped to A-M intent labels.
 - `sentinel/attest/` — ed25519 attestation sign/verify helpers; signs from a PEM file (`ATTESTATION_PRIVATE_KEY_PATH`) or PEM env secret (`ATTESTATION_PRIVATE_KEY_PEM`, for hosted deploys).
 - `alpic.json` — Alpic deploy manifest with uv venv install/start commands for hosting the MCP `verify` tool (#12).
@@ -47,19 +47,21 @@
 - `data/policy.json` — Ineligible contexts, score dimensions, block/escalate thresholds.
 - `data/scenarios.json` — 4 seed scenarios = the acceptance test for the demo.
 - `tests/test_smoke.py` — Health, API scenario, attestation, and MCP wrapper smoke tests.
+- `tests/test_fact_verifier.py` — Mocked Tavily match/mismatch, no-key fallback, failure fallback, source-hash, and deterministic-gate coverage for rating claims.
 - `tests/test_public_api_contract.py` — Public API/MCP contract tests for route envelopes, bounded audit queries, escalation decisions, and signed receipt verification.
 - `tests/test_tracing.py` — Local audit and optional Overmind span tests proving export success/failure never changes API verdicts.
 - `tests/test_thrad_client.py` — Thrad live-shaped bid normalization and timeout/500/malformed fallback tests.
 - `tests/test_gate.py` — Exhaustive deterministic-gate branch tests; proves no LLM verdict override input exists.
 
 ## Recent Changes
+- 2026-06-01: Implemented issue #13 Tavily rating-claim verification behind `TAVILY_API_KEY`, with mocked match/mismatch tests, no-key/failure fixture fallback tests, source hashes on claims, and deterministic-gate coverage.
 - 2026-06-01: Added README known limits and release checks for issue #16, including hosted MCP smoke guidance for deployed `/mcp` URLs.
 - 2026-06-01: Hardened Thrad live-shaped bid normalization for issue #15 with OpenRTB-style payload support and timeout/500/malformed fallback tests.
 - 2026-06-01: Added trace tests for issue #14: local audit persistence without Overmind, mocked Overmind span attributes when configured, and API success when Overmind raises.
 - 2026-06-01: Hardened `/v1/audit/latest` with bounded `limit` validation and added public API/MCP contract tests for issue #16.
 - 2026-06-01: Added `CODE_OF_CONDUCT.md`, `SUPPORT.md`, and a general issue template to improve public maintainer readiness and contributor routing.
-- 2026-06-01: Truth-synced README and frontend copy so Tavily is described as a public-v1 live-verification roadmap item, current claim checks are offline/fixture-backed, Overmind is optional export, and local audit traces remain the source of truth.
-- 2026-06-01: Synced README public verification copy to the current 95-test suite, added release badge, and documented active maintenance gates: CI, CodeQL, Dependabot security updates, secret scanning, push protection, and frontend audit.
+- 2026-06-01: Truth-synced README and frontend copy so live Tavily, fixture fallback, optional Overmind export, and local audit traces are described according to the current code paths.
+- 2026-06-01: Synced README public verification copy to the current 115-test suite, added release badge, and documented active maintenance gates: CI, CodeQL, Dependabot security updates, secret scanning, push protection, and frontend audit.
 - 2026-06-01: Expanded CI to cover frontend `npm audit`, lint, and build; added CodeQL scanning for Python and JavaScript/TypeScript; added Dependabot schedules for pip, npm, and GitHub Actions.
 - 2026-06-01: Added GitHub issue templates and a PR template so future external contributions capture reproduction steps, test evidence, public-claim impact, and deterministic-gate safety before review.
 - 2026-06-01: Added GitHub Actions CI for backend tests plus the seed eval report, and added `ROADMAP.md` to make the public-v1 maintainer backlog and Codex/API-credit use plan reviewer-visible.

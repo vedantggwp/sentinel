@@ -5,7 +5,7 @@
 
 ## The one-sentence pitch
 
-An independent safety layer for ads inside AI conversations: it reads the moment, checks ad claims against fixture-backed evidence today, and emits a **signed, replayable APPROVE/BLOCK receipt** — where **the LLM only scores and deterministic code decides.** Live web claim checks are tracked as a public-v1 integration.
+An independent safety layer for ads inside AI conversations: it reads the moment, checks rating claims against live Tavily evidence when configured or fixture fallback otherwise, and emits a **signed, replayable APPROVE/BLOCK receipt** — where **the LLM only scores and deterministic code decides.**
 
 ## Hard rule (non-negotiable)
 
@@ -57,7 +57,7 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 - **#3 claim_extractor** — small fast model → structured `Claim[]`. Test: extracts "4.9 stars" from the headphones scenario.
 
 ### 🟠 Codex 5.5 — integration-heavy, uses the research findings
-- **#4 fact_verifier** — `AsyncTavilyClient` + **cached fixtures**. Test: catches 4.9-vs-3.2 from a fixture (no network in CI).
+- **#4 fact_verifier** — `AsyncTavilyClient` + **cached fixtures**. Tests: mocked live Tavily catches 4.9-vs-3.2; no-key and failure paths fall back with no network in CI.
 - **#7 tracing.py** — our wrapper (audit persistence + optional Overmind span). Seed 25 `{input, expected_output}` cases.
 
 ### 🟣 Layne — integrations + surface + deploy (parallel from minute one)
@@ -71,7 +71,7 @@ Everyone builds against `contracts.py`. Each task ships with its own `pytest` ch
 ## Build order (critical path to a working demo)
 
 1. **Gate-first vertical slice (done 2026-05-28):** `context_gate` (#2) + safety scoring + `decide_placement` (#5) wired through `/v1/analyze`. All 4 seed scenarios return expected verdicts with deterministic `rule_fired`; Thrad DistilBERT is now an optional pinned classifier signal with heuristic fallback.
-2. **Truth layer (offline fixture done; Tavily adapter next):** `claim_extractor` (#3) + cached `fact_verifier` (#4) make the false-rating BLOCK evidence-backed without network.
+2. **Truth layer (Tavily rating adapter + fixture fallback done):** `claim_extractor` (#3) + `fact_verifier` (#4) make the false-rating BLOCK evidence-backed without requiring network.
 3. **Receipt (sign/verify helper done; runtime key setup next):** `attestation` (#6) signs when `ATTESTATION_PRIVATE_KEY_PATH` exists; tests prove verify passes and tamper fails.
 4. **Reach (done — deployed + live-verified):** `mcp_server` (#8) exposes `verify` over `streamable-http`; deployed on Alpic (#12), live at `https://sentinel-74667ec0.alpic.live/mcp`.
 5. **Observability + polish (local trace/UI done; hosted Overmind next):** `tracing.py` (#7) persists local audit JSONL and ships 25 seed cases; UI (#10/#11) consumes the trace and receipt.

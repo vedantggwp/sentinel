@@ -63,9 +63,22 @@ def test_analyze_contract_persists_audit_record_and_receipt(tmp_path, monkeypatc
     assert body["success"] is True
     assert body["data"]["result"]["verdict"] == Verdict.BLOCK.value
     assert body["data"]["result"]["rule_fired"] == "false_claim"
+    false_claim = next(
+        claim
+        for claim in body["data"]["result"]["claims"]
+        if claim["verified"] is False
+    )
+    assert false_claim["source_url"]
+    assert false_claim["source_hash"]
     assert body["data"]["attestation"]["ad_id"] == "false_rating"
     assert body["data"]["trace"]["ad_id"] == "false_rating"
     assert body["data"]["trace"]["rule_fired"] == "false_claim"
+    trace_claim = next(
+        claim
+        for claim in body["data"]["trace"]["claims"]
+        if claim["verified"] is False
+    )
+    assert trace_claim["source_hash"] == false_claim["source_hash"]
 
     audit = client.get("/v1/audit/latest", params={"limit": 1}).json()["data"]
     assert len(audit["records"]) == 1
